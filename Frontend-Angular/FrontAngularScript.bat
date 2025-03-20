@@ -128,7 +128,7 @@ if not exist "%projectDir%" (
     echo  .sidebar { >> src\app\app.component.scss
     echo  width: 250px; >> src\app\app.component.scss
     echo  height: 100vh; >> src\app\app.component.scss
-    echo  background-color: #003256; /* Blue background */ >> src\app\app.component.scss
+    echo  background-color: #003256;; /* Blue background */ >> src\app\app.component.scss
     echo  color: white; >> src\app\app.component.scss
     echo  position: fixed; >> src\app\app.component.scss
     echo  top: 0; >> src\app\app.component.scss
@@ -174,7 +174,7 @@ if not exist "%projectDir%" (
     echo /* Content Styling */ >> src\app\app.component.scss
     echo  .content { >> src\app\app.component.scss
     echo  flex-grow: 1; >> src\app\app.component.scss
-    echo  margin-left: 150px; /* Matches sidebar width */ >> src\app\app.component.scss
+    echo  margin-left: 130px; /* Matches sidebar width */ >> src\app\app.component.scss
     echo  padding: 20px; >> src\app\app.component.scss
     echo  background-color: #f4f7fa; /* Light background for contrast */ >> src\app\app.component.scss
     echo  overflow-y: auto; >> src\app\app.component.scss
@@ -414,7 +414,7 @@ if not exist "%projectDir%" (
     :: creating sidebar.component.scss
     echo /* Sidebar Styling */ >src\app\sidebar\sidebar.component.scss
     echo  .sidebar { >>src\app\sidebar\sidebar.component.scss
-    echo  width: 250px; >>src\app\sidebar\sidebar.component.scss
+    echo  width: 190px; >>src\app\sidebar\sidebar.component.scss
     echo  height: 100vh; >>src\app\sidebar\sidebar.component.scss
     echo  background-color: #003256; /* Blue background */ >>src\app\sidebar\sidebar.component.scss
     echo  color: white; >>src\app\sidebar\sidebar.component.scss
@@ -612,7 +612,7 @@ if not exist "%projectDir%" (
         echo margin: 5px;>> src\app\%%i\%%i.component.scss
         echo font-size: 14px;>> src\app\%%i\%%i.component.scss
         echo color: #fff;>> src\app\%%i\%%i.component.scss
-        echo background:rgb^(106, 132, 149^);>> src\app\%%i\%%i.component.scss
+        echo background: rgb^(106, 132, 149^); >> src\app\%%i\%%i.component.scss
         echo border: none;>> src\app\%%i\%%i.component.scss
         echo border-radius: 5px;>> src\app\%%i\%%i.component.scss
         echo cursor: pointer;>> src\app\%%i\%%i.component.scss
@@ -926,3 +926,4 @@ if not exist "%projectDir%" (
 
 echo ===== All components and shared service generated successfully! =====
 endlocal
+localhost

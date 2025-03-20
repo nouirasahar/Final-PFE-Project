@@ -3,13 +3,71 @@ import { Routes } from '@angular/router';
 import { AdminComponent } from './admin/admin.component'; 
 import { SidebarComponent } from './sidebar/sidebar.component'; 
 import { UpdateComponent } from './update/update.component'; 
-import { teachersComponent } from './teachers/teachers.component'; 
-import { studentsComponent } from './students/students.component'; 
-import { subjectsComponent } from './subjects/subjects.component'; 
+import { plansComponent } from './plans/plans.component'; 
+import { feedbackComponent } from './feedback/feedback.component'; 
+import { usersComponent } from './users/users.component'; 
+import { servicesComponent } from './services/services.component'; 
+import { addressesComponent } from './addresses/addresses.component'; 
+import { loyaltyComponent } from './loyalty/loyalty.component'; 
+import { profilesComponent } from './profiles/profiles.component'; 
+import { couponsComponent } from './coupons/coupons.component'; 
+import { groupsComponent } from './groups/groups.component'; 
+import { discountsComponent } from './discounts/discounts.component'; 
+import { notificationsComponent } from './notifications/notifications.component'; 
+import { accountsComponent } from './accounts/accounts.component'; 
+import { claimsComponent } from './claims/claims.component'; 
+import { settingsComponent } from './settings/settings.component'; 
+import { ticketsComponent } from './tickets/tickets.component'; 
+import { productsComponent } from './products/products.component'; 
+import { paymentsComponent } from './payments/payments.component'; 
+import { cancellationsComponent } from './cancellations/cancellations.component'; 
+import { promotionsComponent } from './promotions/promotions.component'; 
+import { refundsComponent } from './refunds/refunds.component'; 
+import { authComponent } from './auth/auth.component'; 
+import { engagementsComponent } from './engagements/engagements.component'; 
+import { eventsComponent } from './events/events.component'; 
+import { inventoryComponent } from './inventory/inventory.component'; 
+import { ordersComponent } from './orders/orders.component'; 
+import { branchesComponent } from './branches/branches.component'; 
+import { categoriesComponent } from './categories/categories.component'; 
+import { supportComponent } from './support/support.component'; 
+import { historyComponent } from './history/history.component'; 
+import { invoicesComponent } from './invoices/invoices.component'; 
+import { subscriptionsComponent } from './subscriptions/subscriptions.component'; 
+import { reviewsComponent } from './reviews/reviews.component'; 
 export const routes: Routes = [ 
-  { path: 'teachers', component: teachersComponent }, 
-  { path: 'students', component: studentsComponent }, 
-  { path: 'subjects', component: subjectsComponent }, 
+  { path: 'plans', component: plansComponent }, 
+  { path: 'feedback', component: feedbackComponent }, 
+  { path: 'users', component: usersComponent }, 
+  { path: 'services', component: servicesComponent }, 
+  { path: 'addresses', component: addressesComponent }, 
+  { path: 'loyalty', component: loyaltyComponent }, 
+  { path: 'profiles', component: profilesComponent }, 
+  { path: 'coupons', component: couponsComponent }, 
+  { path: 'groups', component: groupsComponent }, 
+  { path: 'discounts', component: discountsComponent }, 
+  { path: 'notifications', component: notificationsComponent }, 
+  { path: 'accounts', component: accountsComponent }, 
+  { path: 'claims', component: claimsComponent }, 
+  { path: 'settings', component: settingsComponent }, 
+  { path: 'tickets', component: ticketsComponent }, 
+  { path: 'products', component: productsComponent }, 
+  { path: 'payments', component: paymentsComponent }, 
+  { path: 'cancellations', component: cancellationsComponent }, 
+  { path: 'promotions', component: promotionsComponent }, 
+  { path: 'refunds', component: refundsComponent }, 
+  { path: 'auth', component: authComponent }, 
+  { path: 'engagements', component: engagementsComponent }, 
+  { path: 'events', component: eventsComponent }, 
+  { path: 'inventory', component: inventoryComponent }, 
+  { path: 'orders', component: ordersComponent }, 
+  { path: 'branches', component: branchesComponent }, 
+  { path: 'categories', component: categoriesComponent }, 
+  { path: 'support', component: supportComponent }, 
+  { path: 'history', component: historyComponent }, 
+  { path: 'invoices', component: invoicesComponent }, 
+  { path: 'subscriptions', component: subscriptionsComponent }, 
+  { path: 'reviews', component: reviewsComponent }, 
 { path: 'admin', component: AdminComponent }, 
 { path: 'sidebar', component: SidebarComponent}, 
 { path: 'update/:table/:id', component: UpdateComponent }, 
