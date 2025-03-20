@@ -19,7 +19,7 @@ app.listen(port, () => {
     console.log (`Server is running at http://localhost:${port}`);
 }); 
 const uri = 'mongodb://localhost:27017'; 
-const dbName = 'SchoolDB'; 
+const dbName = 'DataTest'; 
 //Configure readline pour lire les entrées et afficher des messages via la console.  
 const rl = readline.createInterface({ 
     input: process.stdin, 

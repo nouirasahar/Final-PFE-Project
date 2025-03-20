@@ -301,6 +301,40 @@ echo         await client.close^(^); >> "%APIFILE%"
 echo  } >> "%APIFILE%"
 echo }^); >> "%APIFILE%"
 
+echo // Route pour supprimer un étudiant par ID >> "%APIFILE%"
+echo // Route pour supprimer un document >> "%APIFILE%"
+echo router.delete^('/delete/:table/:id', async ^(req, res^) =^> { >> "%APIFILE%"
+echo     const client = new MongoClient^(uri^); >> "%APIFILE%"
+echo     try { >> "%APIFILE%"
+echo         await client.connect^(^); >> "%APIFILE%"
+echo         const db = client.db^(dbName^); >> "%APIFILE%"
+echo         const { table, id } = req.params; >> "%APIFILE%"
+echo         console.log^(`Received delete request for table: ${table}, ID: ${id}`^); >> "%APIFILE%"
+
+echo         let objectId; >> "%APIFILE%"
+echo         try { >> "%APIFILE%"
+echo             objectId = new ObjectId^(id^);  // Assurez-vous que l'ID est valide >> "%APIFILE%"
+echo         } catch ^(error^) { >> "%APIFILE%"
+echo             return res.status^(400^).json^({ error: 'Invalid ID format' }^); >> "%APIFILE%"
+echo         } >> "%APIFILE%"
+
+echo         const collection = db.collection^(table^); >> "%APIFILE%"
+echo         const result = await collection.deleteOne^({ _id: objectId }^); >> "%APIFILE%"
+
+echo         if ^(result.deletedCount === 0^) { >> "%APIFILE%"
+echo             return res.status^(404^).json^({ error: 'Document not found' }^); >> "%APIFILE%"
+echo         } >> "%APIFILE%"
+
+echo         res.json^({ message: 'Delete successful' }^); >> "%APIFILE%"
+echo     } catch ^(err^) { >> "%APIFILE%"
+echo         console.error^('Error in /api/delete:', err^); >> "%APIFILE%"
+echo         res.status^(500^).json^({ error: 'Internal Server Error' }^); >> "%APIFILE%"
+echo     } finally { >> "%APIFILE%"
+echo        await client.close^(^); >> "%APIFILE%"
+echo     } >> "%APIFILE%"
+echo }^); >> "%APIFILE%"
+
+
 echo module.exports = router; >> "%APIFILE%"
 echo APIs created
 

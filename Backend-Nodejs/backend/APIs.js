@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { MongoClient, ObjectId } = require('mongodb'); 
 const uri ='mongodb://localhost:27017'; 
-const dbName ='SchoolDB'; 
+const dbName ='DataTest'; 
 //Fonction asynchrone qui connecte à MongoDB, récupère des données, et les retourne.  
 async function fetchData() { 
     const client = new MongoClient(uri); 
@@ -161,33 +161,34 @@ router.get('/:table/:id', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' }); 
     } finally { 
         await client.close(); 
-}
-// Route pour ajouter un document dans une collection
-router.post('/add/:table', async (req, res) => {
-    const client = new MongoClient(uri);
-    try {
-        await client.connect();
-        const db = client.db(dbName);
-        const { table } = req.params; // Récupérer le nom de la table depuis les paramètres
-        const collection = db.collection(table);
-        
-        const newData = req.body; // Récupérer les données du corps de la requête
-
-        // Insérer les nouvelles données dans la collection
-        const result = await collection.insertOne(newData);
-
-        res.json({
-            message: 'Document added successfully',
-            documentId: result.insertedId, // Retourne l'ID du document inséré
-        });
-    } catch (err) {
-        console.error(`Error in /api/add/${req.params.table}:`, err);
-        res.status(500).json({ error: 'Internal Server Error' });
-    } finally {
-        await client.close();
-    }
-});
-
-
+ } 
+}); 
+// Route pour supprimer un étudiant par ID 
+// Route pour supprimer un document 
+router.delete('/delete/:table/:id', async (req, res) => { 
+    const client = new MongoClient(uri); 
+    try { 
+        await client.connect(); 
+        const db = client.db(dbName); 
+        const { table, id } = req.params; 
+        console.log(`Received delete request for table: ${table}, ID: ${id}`); 
+        let objectId; 
+        try { 
+            objectId = new ObjectId(id);  // Assurez-vous que l'ID est valide 
+        } catch (error) { 
+            return res.status(400).json({ error: 'Invalid ID format' }); 
+        } 
+        const collection = db.collection(table); 
+        const result = await collection.deleteOne({ _id: objectId }); 
+        if (result.deletedCount === 0) { 
+            return res.status(404).json({ error: 'Document not found' }); 
+        } 
+        res.json({ message: 'Delete successful' }); 
+    } catch (err) { 
+        console.error('Error in /api/delete:', err); 
+        res.status(500).json({ error: 'Internal Server Error' }); 
+    } finally { 
+       await client.close(); 
+    } 
 }); 
 module.exports = router; 
