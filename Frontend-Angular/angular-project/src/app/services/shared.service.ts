@@ -23,6 +23,9 @@ export class SharedService {
   return this.http.get(`${this.apiUrl}/getall`); 
  }
 deleteItem(table: string, id: string): Observable<any> { 
-return this.http.delete(`${this.apiUrl}/delete/${table}/${id}`); 
+  return this.http.delete(`${this.apiUrl}/delete/${table}/${id}`); 
+}  
+deleteTable(table: string): Observable<any> { 
+  return this.http.delete(`${this.apiUrl}/delete/${table}`); 
 }  
 } 

@@ -230,9 +230,6 @@ if not exist "%projectDir%" (
     echo         ^<button ^(click^)="viewTable(table)" class="btn"^> >>src\app\admin\admin.component.html
     echo           ^<i class="fas fa-eye"^>^</i^> View >>src\app\admin\admin.component.html
     echo         ^</button^> >>src\app\admin\admin.component.html
-    echo         ^<button ^(click^)="updateTable(table)" class="btn"^> >>src\app\admin\admin.component.html
-    echo           ^<i class="fas fa-pencil-alt"^>^</i^> Update >>src\app\admin\admin.component.html
-    echo         ^</button^> >>src\app\admin\admin.component.html
     echo         ^<button ^(click^)="deleteTable(table)" class="btn"^> >>src\app\admin\admin.component.html
     echo           ^<i class="fas fa-trash-alt"^>^</i^> Delete >>src\app\admin\admin.component.html
     echo         ^</button^> >>src\app\admin\admin.component.html
@@ -342,19 +339,25 @@ if not exist "%projectDir%" (
     echo   padding: 10px; >>src\app\admin\admin.component.Scss
     echo   margin: 10px; >>src\app\admin\admin.component.Scss
     echo }>>src\app\admin\admin.component.Scss
-    
-
-    echo .admin-dashboard p {>>src\app\admin\admin.component.Scss
-    echo   font-size: 22px;>>src\app\admin\admin.component.Scss
     echo }>>src\app\admin\admin.component.Scss
-    echo .admin-dashboard table {>>src\app\admin\admin.component.Scss
-    echo   font-size: 12px;>>src\app\admin\admin.component.Scss
-    echo }>>src\app\admin\admin.component.Scss
-    echo .admin-dashboard .btn {>>src\app\admin\admin.component.Scss
-    echo   font-size: 12px;>>src\app\admin\admin.component.Scss
-    echo   padding: 6px 10px;>>src\app\admin\admin.component.Scss
-    echo }>>src\app\admin\admin.component.Scss
-    echo }>>src\app\admin\admin.component.Scss
+    echo /* Button Styling */ >>src\app\admin\admin.component.Scss
+    echo .admin-dashboard .btn { >>src\app\admin\admin.component.Scss
+    echo background-color: #d6eaff; /* Light blue button color */ >>src\app\admin\admin.component.Scss
+    echo color: #34495e; /* Dark text for contrast */ >>src\app\admin\admin.component.Scss
+    echo border: 1px solid #a9d5ff; /* Slight border for depth */ >>src\app\admin\admin.component.Scss
+    echo padding: 8px 12px; >>src\app\admin\admin.component.Scss
+    echo font-size: 14px; >>src\app\admin\admin.component.Scss
+    echo border-radius: 6px; >>src\app\admin\admin.component.Scss
+    echo cursor: pointer; >>src\app\admin\admin.component.Scss
+    echo transition: all 0.3s ease; >>src\app\admin\admin.component.Scss
+    echo margin: 0 15px; /* Add spacing between buttons */ >>src\app\admin\admin.component.Scss
+    echo display: inline-flex; >>src\app\admin\admin.component.Scss
+    echo align-items: center; >>src\app\admin\admin.component.Scss
+    echo width: 40%%; >>src\app\admin\admin.component.Scss
+    echo align-items: center; /* Center the content vertically */ >>src\app\admin\admin.component.Scss
+    echo text-align: center; /* Ensure the text is centered */ >>src\app\admin\admin.component.Scss
+    echo justify-content: center; /* Center the content horizontally */ >>src\app\admin\admin.component.Scss 
+    echo } >>src\app\admin\admin.component.Scss
     ::creating admin component.ts
     echo import { Component, OnInit } from '@angular/core'; >src\app\admin\admin.component.ts
     echo import { SharedService } from '../services/shared.service'; >>src\app\admin\admin.component.ts
@@ -390,15 +393,22 @@ if not exist "%projectDir%" (
     echo         const route = `/${table.toLowerCase^(^)}`; // Ex: "Students" =^> "/students">>src\app\admin\admin.component.ts
     echo         this.router.navigate^([route]^);>>src\app\admin\admin.component.ts
     echo }>>src\app\admin\admin.component.ts
-    echo       updateTable^(table: string^): void {>>src\app\admin\admin.component.ts
-    echo         console.log^('Update table:', table^);>>src\app\admin\admin.component.ts
-    echo         alert^(`Updating table: ${table}`^);>>src\app\admin\admin.component.ts
-    echo }>>src\app\admin\admin.component.ts
-    echo       deleteTable^(table: string^): void {>>src\app\admin\admin.component.ts
-    echo         console.log^('Delete table:', table^);>>src\app\admin\admin.component.ts
-    echo         this.tables = this.tables.filter^(t =^> t !== table^);>>src\app\admin\admin.component.ts
-    echo         delete this.dataMap[table];>>src\app\admin\admin.component.ts
-    echo         alert^(`Table ${table} deleted!`^);>>src\app\admin\admin.component.ts
+    
+    echo deleteTable^(table: string^): void {>>src\app\admin\admin.component.ts
+    echo  if ^(confirm^(`Es-tu sûr de vouloir supprimer '${table}' ?`^)^) { >>src\app\admin\admin.component.ts
+    echo    this.service.deleteTable^(table^).subscribe^(>>src\app\admin\admin.component.ts
+    echo     ^(response^) =^> {>>src\app\admin\admin.component.ts
+    echo       console.log^('Table supprimée:', response^); >>src\app\admin\admin.component.ts
+    echo       this.tables = this.tables.filter^(t =^> t !== table^); >>src\app\admin\admin.component.ts
+    echo       delete this.dataMap[table]; >>src\app\admin\admin.component.ts
+    echo       alert^(`Table ${table} supprimée avec succès !`^); >>src\app\admin\admin.component.ts
+    echo      }, >>src\app\admin\admin.component.ts
+    echo      ^(error^) =^> { >>src\app\admin\admin.component.ts
+    echo        console.error^('Erreur lors de la suppression de la table:', error^); >>src\app\admin\admin.component.ts
+    echo        alert^(`Erreur lors de la suppression de la table '${table}'`^); >>src\app\admin\admin.component.ts
+    echo      } >>src\app\admin\admin.component.ts
+    echo    ^); >>src\app\admin\admin.component.ts
+    echo  }>>src\app\admin\admin.component.ts
     echo }>>src\app\admin\admin.component.ts
     echo }>>src\app\admin\admin.component.ts
     :: creating sidebar.component.html
@@ -875,9 +885,13 @@ if not exist "%projectDir%" (
     echo   return this.http.get^(`${this.apiUrl}/getall`^); >> src\app\services\shared.service.ts
     echo  }>> src\app\services\shared.service.ts
     echo deleteItem^(table: string, id: string^): Observable^<any^> { >> src\app\services\shared.service.ts
-    echo return this.http.delete^(`${this.apiUrl}/delete/${table}/${id}`^); >> src\app\services\shared.service.ts
+    echo   return this.http.delete^(`${this.apiUrl}/delete/${table}/${id}`^); >> src\app\services\shared.service.ts
     echo }  >> src\app\services\shared.service.ts
 
+    echo deleteTable^(table: string^): Observable^<any^> { >> src\app\services\shared.service.ts
+    echo   return this.http.delete^(`${this.apiUrl}/delete/${table}`^); >> src\app\services\shared.service.ts
+    echo }  >> src\app\services\shared.service.ts
+    
     echo } >> src\app\services\shared.service.ts
 
     if errorlevel 1 (

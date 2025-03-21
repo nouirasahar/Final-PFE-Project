@@ -191,4 +191,24 @@ router.delete('/delete/:table/:id', async (req, res) => {
        await client.close(); 
     } 
 }); 
+router.delete('/delete/:table', async (req, res) => { 
+    const client = new MongoClient(uri); 
+    try { 
+        await client.connect(); 
+        const db = client.db(dbName); 
+        const { table } = req.params; 
+        const collections = await db.listCollections({ name: table }).toArray(); 
+        if (collections.length === 0) { 
+            return res.status(404).json({ error: 'Table not found' });  // Assurez-vous que l'ID est valide 
+        } 
+            // Drop the collection 
+        await db.collection(table).drop(); 
+        res.json({ message: `Table '${table}' deleted successfully` }); 
+        } catch (err) { 
+        console.error(`Error deleting table '${req.params.table}':`, err); 
+           res.status(500).json({ error: 'Internal Server Error' }); 
+        } finally { 
+        await client.close(); 
+        } 
+}); 
 module.exports = router; 

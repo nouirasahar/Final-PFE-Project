@@ -32,14 +32,20 @@ export class AdminComponent implements OnInit {
         const route = `/${table.toLowerCase()}`; // Ex: "Students" => "/students"
         this.router.navigate([route]);
 }
-      updateTable(table: string): void {
-        console.log('Update table:', table);
-        alert(`Updating table: ${table}`);
-}
-      deleteTable(table: string): void {
-        console.log('Delete table:', table);
-        this.tables = this.tables.filter(t => t !== table);
-        delete this.dataMap[table];
-        alert(`Table ${table} deleted!`);
+deleteTable(table: string): void {
+ if (confirm(`Es-tu sûr de vouloir supprimer '${table}' ?`)) { 
+   this.service.deleteTable(table).subscribe(
+    (response) => {
+      console.log('Table supprimée:', response); 
+      this.tables = this.tables.filter(t => t !== table); 
+      delete this.dataMap[table]; 
+      alert(`Table ${table} supprimée avec succès !`); 
+     }, 
+     (error) => { 
+       console.error('Erreur lors de la suppression de la table:', error); 
+       alert(`Erreur lors de la suppression de la table '${table}'`); 
+     } 
+   ); 
+ }
 }
 }
