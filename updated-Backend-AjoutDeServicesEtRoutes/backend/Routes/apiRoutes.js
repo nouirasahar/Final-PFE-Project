@@ -1,75 +1,13 @@
-//Définit l'URI de connexion à la base de données MongoDB locale.  
+const mongodbService = require('../services/mongodbService');
 const express = require('express'); 
 const router = express.Router();
 const { MongoClient, ObjectId } = require('mongodb'); 
 const uri ='mongodb://localhost:27017'; 
 const dbName ='DataTest'; 
-//Fonction asynchrone qui connecte à MongoDB, récupère des données, et les retourne.  
-async function fetchData() { 
-    const client = new MongoClient(uri); 
-    try { 
-        await client.connect(); 
-        console.log('Connected to MongoDB'); 
-        const db = client.db(dbName); 
-        const collections = await db.listCollections().toArray(); 
-// parcourir 
-        let data = {}; 
-        for (const collectionInfo of collections) { 
-            const collectionName = collectionInfo.name; 
-            const collection = db.collection(collectionName); 
-            // Fetch all documents from the collection
-            const documents = await collection.find({}).toArray();
-            //Store the documents in the data object
-            data[collectionName] = documents;      
-            } 
-        return data; 
-    } finally { 
-        await client.close(); 
-    } 
-} 
-// Fonction pour récupérer les noms des tables et leurs colonnes 
-async function getTablesAndColumns() { 
-    const client = new MongoClient(uri); 
-    try { 
-        await client.connect(); 
-// Récupère une liste de toutes les collections dans la base de données
-        const db = client.db(dbName); 
-        const collections = await db.listCollections().toArray(); 
-//Initialise un objet vide pour stocker les informations des tables et colonnes.  
-        let tablesInfo = {}; 
-        for (const collectionInfo of collections) { 
-            const collectionName = collectionInfo.name; 
-            const collection = db.collection(collectionName); 
-// // Récupère le premier document pour identifier les colonnes
-            const firstDocument = await collection.findOne({}); 
-            if (firstDocument) { 
-                tablesInfo[collectionName] = Object.keys(firstDocument); 
-            } else { 
-                tablesInfo[collectionName] = ['No columns (empty collection)']; 
-            } 
-        } 
-//Retourne l'objet contenant les tables et leurs colonnes.
-        return tablesInfo; 
-    } finally { 
-        await client.close(); 
-    } 
-} 
-// Fonction pour récupérer uniquement les noms des tables  
-async function getTableNames() {  
-    const client = new MongoClient(uri);  
-    try {  
-        await client.connect();  
-        const db = client.db(dbName);  
-        // Récupère une liste de toutes les collections dans la base de données  
-        const collections = await db.listCollections().toArray();  
-        // Extrait uniquement les noms des collections  
-        const tableNames = collections.map(collection => collection.name);  
-        // Retourne un tableau avec les noms des tables 
-        return tableNames; 
-    } finally {  
-        await client.close();  
-    }  
-}  
+const {
+   fetchData,
+   getTableNames,
+} = require('../services/mongodbService');  
 // API pour récupérer les noms des tables 
 router.get('/tableNames', async (req, res) => { 
     try {  
@@ -87,15 +25,6 @@ router.get('/getall', async (req, res) => {
         res.json(data); 
     } catch (err) { 
         console.error('Error in /api/getall:', err); 
-        res.status(500).json({ error: 'Internal Server Error' }); 
-    } 
-}); 
-router.get('/tables', async (req, res) => { 
-    try { 
-        const tablesInfo = await getTablesAndColumns(); 
-        res.json(tablesInfo); 
-    } catch (err) { 
-        console.error('Error in /api/tables:', err); 
         res.status(500).json({ error: 'Internal Server Error' }); 
     } 
 }); 
@@ -118,7 +47,7 @@ router.put('/update/:table/:id', async (req, res) => {
         const collection = db.collection(table); 
         // Remove _id from update data 
         const updateData = { ...req.body }; 
-        delete updateData._id;   
+        delete updateData._id;  
         const result = await collection.updateOne( 
             { _id: objectId },  
             { $set: updateData } 
@@ -163,7 +92,6 @@ router.get('/:table/:id', async (req, res) => {
         await client.close(); 
  } 
 }); 
-// Route pour supprimer un étudiant par ID 
 // Route pour supprimer un document 
 router.delete('/delete/:table/:id', async (req, res) => { 
     const client = new MongoClient(uri); 

@@ -1,8 +1,8 @@
+const apiRoutes = require('./Routes/apiRoutes'); 
 const express = require('express'); 
 var cors = require('cors'); 
 const readline = require('readline'); 
 const app = express(); 
-const apiRoutes = require('./APIs'); 
 var corsOptions = {  
     origin: 'http://localhost:4200',  // No trailing slash 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow necessary HTTP methods 
