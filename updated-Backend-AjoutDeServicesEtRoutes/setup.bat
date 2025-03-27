@@ -13,6 +13,7 @@ set SERVICE_FILE=%SERVICES_DIR%\mongodbService.js
 set ROUTE_FILE=%ROUTES_DIR%\apiRoutes.js
 set INDEX_FILE=%BACKEND_DIR%\index.js
 
+:: Check if Node.js is installed
 node -v >nul 2>&1
 if %errorlevel% neq 0 (
     echo Node.js is not installed! Please download it here: https://nodejs.org/
@@ -43,7 +44,7 @@ if not exist "%ROUTES_DIR%" (
 )
 
 
-:: Check if Node.js is installed
+
 
 
 :: Prompt user for MongoDB URI
