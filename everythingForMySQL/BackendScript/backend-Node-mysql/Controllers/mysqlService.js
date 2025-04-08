@@ -1,7 +1,4 @@
 const db = require('./dbConnection'); 
-
-
-
 // function to delete Item in a table
 const deleteItem = (table, id, callback) => {
   const query = `DELETE FROM ${table} WHERE id = ?`;

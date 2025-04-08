@@ -1,13 +1,10 @@
 const express = require('express'); 
 const router = express.Router(); 
 const db = require('../Controllers/dbConnection'); 
-
 const { deleteItem,deleteTable  } = require('../Controllers/mysqlService');
 router.get('/', (req, res) => { 
     res.send('Bienvenue sur ton API !'); 
   }); 
-
-
 //route for tablenames
 router.get('/tablenames', (req, res) => {
     getTableNames((err, data) => {
@@ -15,69 +12,45 @@ router.get('/tablenames', (req, res) => {
       res.json(data);
     });
   });
-
-
-// Fonction pour récupérer les données de toutes les tables
-router.get('/getall', (req, res) => {
-  // Étape 1 : Récupérer les noms de toutes les tables
-  db.query('SHOW TABLES', (err, tables) => {
-    if (err) {
-      return res.status(500).send('Erreur serveur lors de la récupération des tables');
-    }
-
-    // Extraire uniquement les noms des tables
-    const tableNames = tables.map(table => Object.values(table)[0]);
-
-    // Étape 2 : Pour chaque table, récupérer ses données
-    const promises = tableNames.map(table => {
-      return new Promise((resolve, reject) => {
-        // Récupérer les données de chaque table
-        db.query(`SELECT * FROM ${table}`, (err, data) => {
-          if (err) {
-            reject(`Erreur avec la table ${table}: ${err}`);
-          } else {
-            resolve({ table, data });
-          }
-        });
-      });
-    });
-
-    // Étape 3 : Attendre que toutes les données des tables soient récupérées
-    Promise.all(promises)
-      .then(results => {
-        // Créer un objet avec les données de toutes les tables
-        const allTablesData = results.reduce((acc, { table, data }) => {
-          acc[table] = data;
-          return acc;
-        }, {});
-
-        // Retourner les données de toutes les tables en réponse
-        res.json(allTablesData);
-      })
-      .catch(err => {
-        res.status(500).send(`Erreur lors de la récupération des données des tables: ${err}`);
-      });
-  });
-});
-
-// Route pour récupérer les noms de toutes les tables
-router.get('/tablenames', (req, res) => {
-  // Requête pour obtenir les noms des tables
-  db.query('SHOW TABLES', (err, results) => {
-    if (err) {
-      return res.status(500).send('Erreur serveur lors de la récupération des tables');
-    }
-
-    // Extraire uniquement les noms des tables (en prenant les valeurs de la colonne "Tables_in_ma_base")
-    const tableNames = results.map(row => Object.values(row)[0]);
-
-    // Retourner les noms des tables en réponse
-    res.json(tableNames);
-  });
-});
-
-
-
+  
+// Route to fetch all data from all tables in the database 
+router.get('/getall', (req, res) => { 
+  // Étape 1 : Récupérer les noms de toutes les tables 
+    db.query('SHOW TABLES', (err, tables) => { 
+      if (err) { 
+        return res.status(500).send('Erreur serveur lors de la récupération des tables'); 
+      } 
+      // Extraire uniquement les noms des tables 
+      const tableNames = tables.map(table => Object.values(table)[0]); 
+      // Étape 2 : Pour chaque table, récupérer ses données 
+      const promises = tableNames.map(table => { 
+        return new Promise((resolve, reject) => { 
+          // Récupérer les données de chaque  
+          db.query(`SELECT * FROM ${table}`, (err, data) => { 
+            if (err) { 
+              reject(`Erreur avec la table ${table}: ${err}`); 
+            } else { 
+              resolve({ table, data }); 
+            } 
+          }); 
+        }); 
+      }); 
+      // Étape 3 : Attendre que toutes les données des tables soient récupérées 
+      Promise.all(promises) 
+        .then(results => { 
+          // Créer un objet avec les données de toutes les tables 
+          const allTablesData = results.reduce((acc, { table, data }) => { 
+            acc[table] = data; 
+            return acc; 
+          }, {}); 
+          // Retourner les données de toutes les tables en réponse 
+          res.json(allTablesData); 
+        }) 
+        .catch(err => { 
+          res.status(500).send(`Erreur lors de la récupération des données des tables: ${err}`); 
+  }); 
+    }); 
+  }); 
 // Route to delete an item from a specified table by id 
 router.delete('/delete/:table/:id', (req, res) => { 
   const { table, id } = req.params; 
@@ -98,9 +71,7 @@ router.delete('/deleteTable/:tableName', (req, res) => {
     res.status(200).json(result);
   });
 });
-
-
-// Route pour mettre à jour un enregistrement dans une table MySQL 
+// Route to update  
 router.put('/update/:table/:id', (req, res) => { 
  const { table, id } = req.params; 
  const updateData = req.body; 

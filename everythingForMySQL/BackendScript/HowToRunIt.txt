@@ -1,0 +1,1 @@
+Backend.bat localhost db_name(exmpl: mydatabase)  username(exemple: root) psswd(exemple: admin123456789) port(exemple:3307)
