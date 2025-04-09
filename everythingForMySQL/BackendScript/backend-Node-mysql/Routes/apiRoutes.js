@@ -5,14 +5,19 @@ const { deleteItem,deleteTable  } = require('../Controllers/mysqlService');
 router.get('/', (req, res) => { 
     res.send('Bienvenue sur ton API !'); 
   }); 
-//route for tablenames
+// Route pour récupérer les noms de toutes les tables
 router.get('/tablenames', (req, res) => {
-    getTableNames((err, data) => {
-      if (err) return res.status(500).send('Erreur serveur');
-      res.json(data);
-    });
+  // Requête pour obtenir les noms des tables
+  db.query('SHOW TABLES', (err, results) => {
+    if (err) {
+      return res.status(500).send('Erreur serveur lors de la récupération des tables');
+    }
+    // Extraire uniquement les noms des tables (en prenant les valeurs de la colonne "Tables_in_ma_base")
+    const tableNames = results.map(row => Object.values(row)[0]);
+    // Retourner les noms des tables en réponse
+    res.json(tableNames);
   });
-  
+});
 // Route to fetch all data from all tables in the database 
 router.get('/getall', (req, res) => { 
   // Étape 1 : Récupérer les noms de toutes les tables 
