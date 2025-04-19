@@ -197,7 +197,7 @@ echo const { deleteCollection } = require('../services/mongodbService');
 echo const express = require('express'); >> "%ROUTE_FILE%"
 echo const router = express.Router();>>  "%ROUTE_FILE%"
 echo const { MongoClient, ObjectId } = require('mongodb'); >>  "%ROUTE_FILE%"
-echo const uri ='%MONGO_URI%'; >> "%ROUTE_FILE%"
+echo const uri ='%DB_URI%'; >> "%ROUTE_FILE%"
 echo const dbName ='%DB_NAME%';>> "%ROUTE_FILE%"
 echo const {>> "%ROUTE_FILE%"
 echo    fetchData,>> "%ROUTE_FILE%"
