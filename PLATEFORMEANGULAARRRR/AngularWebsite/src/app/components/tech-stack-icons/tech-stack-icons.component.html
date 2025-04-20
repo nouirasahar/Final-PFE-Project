@@ -1,0 +1,11 @@
+<div class="tech-stack-container">
+  <h2 class="tech-stack-title">Our Technology Stack</h2>
+  <div class="tech-stack-grid">
+    @for (tech of techStack; track tech.name) {
+      <div class="tech-item">
+        <img [src]="tech.icon" [alt]="tech.name" class="tech-icon">
+        <span class="tech-name">{{ tech.name }}</span>
+      </div>
+    }
+  </div>
+</div> 

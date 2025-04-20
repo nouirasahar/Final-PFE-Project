@@ -1,0 +1,105 @@
+<div class="database-config-container">
+  <h2 class="config-title">Database Configuration</h2>
+  
+  <form [formGroup]="dbConfigForm" (ngSubmit)="onSubmit()" class="config-form">
+    <div class="form-group">
+      <label for="host">Host</label>
+      <input 
+        id="host"
+        type="text"
+        formControlName="host"
+        placeholder="localhost"
+        [class.error]="dbConfigForm.get('host')?.invalid && dbConfigForm.get('host')?.touched"
+      >
+      <span class="error-message" *ngIf="dbConfigForm.get('host')?.invalid && dbConfigForm.get('host')?.touched">
+        Host is required
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="port">Port</label>
+      <input 
+        id="port"
+        type="text"
+        formControlName="port"
+        placeholder="5432"
+        [class.error]="dbConfigForm.get('port')?.invalid && dbConfigForm.get('port')?.touched"
+      >
+      <span class="error-message" *ngIf="dbConfigForm.get('port')?.invalid && dbConfigForm.get('port')?.touched">
+        Valid port number is required
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="database">Database Name</label>
+      <input 
+        id="database"
+        type="text"
+        formControlName="database"
+        placeholder="mydatabase"
+        [class.error]="dbConfigForm.get('database')?.invalid && dbConfigForm.get('database')?.touched"
+      >
+      <span class="error-message" *ngIf="dbConfigForm.get('database')?.invalid && dbConfigForm.get('database')?.touched">
+        Database name is required
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input 
+        id="username"
+        type="text"
+        formControlName="username"
+        placeholder="postgres"
+        [class.error]="dbConfigForm.get('username')?.invalid && dbConfigForm.get('username')?.touched"
+      >
+      <span class="error-message" *ngIf="dbConfigForm.get('username')?.invalid && dbConfigForm.get('username')?.touched">
+        Username is required
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input 
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="********"
+        [class.error]="dbConfigForm.get('password')?.invalid && dbConfigForm.get('password')?.touched"
+      >
+      <span class="error-message" *ngIf="dbConfigForm.get('password')?.invalid && dbConfigForm.get('password')?.touched">
+        Password must be at least 6 characters
+      </span>
+    </div>
+
+    <div class="form-group checkbox">
+      <label>
+        <input type="checkbox" formControlName="ssl">
+        Use SSL Connection
+      </label>
+    </div>
+
+    <div class="connection-status" [class]="connectionStatus">
+      <span class="status-icon"></span>
+      <span class="status-text">
+        {{ connectionStatus === 'disconnected' ? 'Disconnected' :
+           connectionStatus === 'connecting' ? 'Connecting...' :
+           connectionStatus === 'connected' ? 'Connected' : 'Connection Error' }}
+      </span>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <div class="button-group">
+      <button type="button" class="btn btn-secondary" (click)="testConnection()" [disabled]="!dbConfigForm.valid">
+        Test Connection
+      </button>
+      <button type="button" class="btn btn-danger" (click)="resetForm()">
+        Reset
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="!dbConfigForm.valid">
+        Save Configuration
+      </button>
+    </div>
+  </form>
+</div> 
