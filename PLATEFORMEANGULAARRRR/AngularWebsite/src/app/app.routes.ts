@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
-import { DatabaseConfigurationComponent } from './pages/database-configuration.component';
+import { DatabaseConfigurationComponent } from './components/DatabaseConfiguration/database-configuration.component';
 import { TechChoosingComponent } from './components/tech-choosing/tech-choosing.component';
 import { GenerateProjectComponent } from './components/generate-project/generate-project.component';
 

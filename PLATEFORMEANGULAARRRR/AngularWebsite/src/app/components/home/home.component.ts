@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FeatureIconComponent } from '../feature-icon/feature-icon.component';
-import { TechStackIconsComponent } from '../tech-stack-icons/tech-stack-icons.component';
+
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, FeatureIconComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -37,7 +36,7 @@ export class HomeComponent {
     },
     {
       title: 'Database Integration',
-      description: 'Automatic API creation',
+      description: 'You connect to your own database and get  Automatically created APIs ',
       icon: 'fas fa-database'
     },
     {
@@ -46,8 +45,8 @@ export class HomeComponent {
       icon: 'fas fa-layer-group'
     },
     {
-      title: 'Ready for Deployment',
-      description: 'Get production-ready code with best practices built in',
+      title: 'shared environments',
+      description: 'Execution will take place in shared environments (Docker, virtual machines, or physical machines)',
       icon: 'fas fa-rocket'
     },
     {

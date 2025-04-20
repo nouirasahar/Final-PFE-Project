@@ -1,7 +1,6 @@
 <div class="container">
   <div class="header">
-    <img src="assets/images/mongodb.png" alt="MongoDB" class="logo">
-    <h1>MongoDB Configuration</h1>
+    <h1>Database Configuration</h1>
   </div>
 
   <div class="form">
@@ -10,7 +9,7 @@
         <i class="icon">👤</i>
         Username
       </label>
-      <input type="text" [(ngModel)]="databaseConfig.username" placeholder="postgres">
+      <input type="text" [(ngModel)]="databaseConfig.username" placeholder="mysql">
     </div>
 
     <div class="form-group">
@@ -26,21 +25,21 @@
         <i class="icon">🌐</i>
         Host
       </label>
-      <input type="text" [(ngModel)]="databaseConfig.host" placeholder="localhost">
+      <input type="text" [(ngModel)]="databaseConfig.host" placeholder="ex. localhost">
     </div>
 
     <div class="form-row">
       <div class="form-group half">
         <label>
-          <i class="icon">🔌</i>
+          <i class="icon"></i>
           Port
         </label>
-        <input type="text" [(ngModel)]="databaseConfig.port" placeholder="27017">
+        <input type="text" [(ngModel)]="databaseConfig.port" placeholder="ex. 27017 ">
       </div>
 
       <div class="form-group half">
         <label>
-          <i class="icon">💾</i>
+          <i class="icon"></i>
           Database Name
         </label>
         <input type="text" [(ngModel)]="databaseConfig.databaseName" placeholder="my_application">

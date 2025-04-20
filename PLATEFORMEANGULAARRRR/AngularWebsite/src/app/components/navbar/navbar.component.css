@@ -1,32 +1,33 @@
-<nav class="navbar">
-  <div class="navbar-content">
-    <!-- Logo -->
-    <a [routerLink]="['/']" class="logo">
-      <span class="logo-icon">🚀</span>
-      {{ title }}
-    </a>
+.navbar {
+  @apply flex items-center justify-between py-4 px-6 shadow-sm;
+  background: linear-gradient(to right, #E0E7FF, #E9D5FF, #BAE6FD);
+}
 
-    <!-- Navigation Links -->
-    <div class="nav-links" [class.active]="isMenuOpen">
-      <ng-container *ngFor="let item of menuItems">
-        <a [routerLink]="[item.path]" 
-           routerLinkActive="active"
-           class="nav-link">
-          {{ item.label }}
-        </a>
-      </ng-container>
+.brand {
+  @apply flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer no-underline;
+}
 
-      <!-- Get Started Button -->
-      <a [routerLink]="['/get-started']" class="cta-button">
-        Get Started
-      </a>
-    </div>
+.icon {
+  color: #7C3AED;
+}
 
-    <!-- Mobile Menu Toggle -->
-    <button class="menu-toggle" (click)="toggleMenu()" [class.active]="isMenuOpen">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-  </div>
-</nav>
+.title {
+  @apply text-2xl font-semibold;
+}
+
+.nav-links {
+  @apply flex items-center gap-4;
+}
+
+.link {
+  @apply text-gray-700 hover:text-gray-900 text-base no-underline;
+}
+
+.get-started {
+  @apply px-4 py-2 text-white text-base rounded-full transition-colors no-underline;
+  background-color: #7C3AED;
+
+  &:hover {
+    background-color: #6D28D9;
+  }
+}

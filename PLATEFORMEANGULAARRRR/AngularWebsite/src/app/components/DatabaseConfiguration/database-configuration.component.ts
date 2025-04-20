@@ -14,8 +14,8 @@ export class DatabaseConfigurationComponent {
   databaseConfig = {
     username: '',
     password: '',
-    host: 'localhost',
-    port: '27017',
+    host: '',
+    port: '',
     databaseName: ''
   };
 

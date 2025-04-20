@@ -19,49 +19,45 @@ export class GenerateProjectComponent implements OnInit {
   currentStep = 0;
   
   steps: Step[] = [
-    { title: 'Initializing Project Scaffold', status: 'in-progress' },
-    { title: 'Setting up Angular Components', status: 'pending' },
-    { title: 'Configuring Express.js Services', status: 'pending' },
-    { title: 'Connecting to MongoDB Database', status: 'pending' },
+    { title: 'Connecting to your Database', status: 'in-progress' },
+    { title: ' Initializing Project ', status: 'pending' },
     { title: 'Generating Data Models & Entities', status: 'pending' },
+    { title: 'Configuring Express.js Services', status: 'pending' },
+    { title: 'Setting up Frontend Components', status: 'pending' },
     { title: 'Creating API Endpoints & Controllers', status: 'pending' },
-    { title: 'Building UI Components & Pages', status: 'pending' },
+    { title: 'Building interfaces', status: 'pending' },
     { title: 'Setting up Deployment Configuration', status: 'pending' },
-    { title: 'Finalizing Project & Optimizing', status: 'pending' }
+    { title: 'Finalizing Project ', status: 'pending' }
   ];
 
   features = {
     frontend: {
-      title: 'Angular',
+      title: 'Frontend Features',
       icon: '⚡',
       items: [
         'Components & Pages',
         'Routing Configuration',
-        'State Management',
         'API Integration'
       ]
     },
     backend: {
-      title: 'Express.js',
-      icon: '🚀',
+      title: 'Backend Features',
+      icon: '⚡',
       items: [
-        'API Endpoints',
-        'Authentication',
-        'Data Validation',
-        'Business Logic'
+        'Connecting to the database',
+        'API Endpoints'
       ]
     },
     database: {
-      title: 'MongoDB',
-      icon: '🗄️',
+      title: 'Database Features',
+      icon: '⚡',
       items: [
-        'Schema Design',
-        'Migrations',
-        'Connection Pool',
-        'DB data test'
+        'MySQL Support',
+        'Mongo Support',
       ]
     }
   };
+  
 
   ngOnInit() {
     this.startGeneration();

@@ -1,5 +1,5 @@
 .container {
-  max-width: 400px;
+  max-width: 500px;
   margin: 2rem auto;
   padding: 1.5rem;
 }
@@ -59,7 +59,7 @@ label {
 }
 
 input {
-  width: 100%;
+  width: 80%;
   padding: 0.5rem;
   border: 1px solid #E5E7EB;
   border-radius: 6px;
