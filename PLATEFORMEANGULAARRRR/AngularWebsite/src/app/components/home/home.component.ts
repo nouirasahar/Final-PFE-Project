@@ -30,31 +30,32 @@ export class HomeComponent {
 
   features = [
     {
-      title: 'Full Stack Generation',
+      title: '💻 Full Stack Generation',
       description: 'Generate frontend and backend code with a single click',
       icon: 'fas fa-code'
     },
     {
-      title: 'Database Integration',
+      title: '🗄️ Database Integration',
       description: 'You connect to your own database and get  Automatically created APIs ',
       icon: 'fas fa-database'
     },
     {
-      title: 'Multiple Frameworks',
+      title: '🧩 Multiple Frameworks',
       description: 'Support for various frontend and backend frameworks',
       icon: 'fas fa-layer-group'
     },
     {
-      title: 'shared environments',
+      title: '🌐 Shared Environments',
       description: 'Execution will take place in shared environments (Docker, virtual machines, or physical machines)',
       icon: 'fas fa-rocket'
     },
     {
-      title: 'Admin Dashboard',
+      title: '📊 Admin Dashboard',
       description: 'Easily visualize and manage your database through an automatically generated dynamic interface.',
       icon: 'fas fa-chart-line'
     }
   ];
+  
 
   steps = [
     {

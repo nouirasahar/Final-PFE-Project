@@ -18,65 +18,67 @@ export class TechChoosingComponent {
   frontendOptions = [
     {
       name: 'React',
-      description: 'A JavaScript library for building user interfaces',
+      description: 'A JavaScript library for building interactive UIs',
       icon: 'react.png',
       id: 'react'
     },
     {
       name: 'Angular',
-      description: 'A platform for building web applications',
+      description: 'A TypeScript-based framework for building web apps',
       icon: 'angular.png',
       id: 'angular'
     },
     {
       name: 'Vue.js',
-      description: 'A progressive framework for building user interfaces',
+      description: 'A progressive framework for building UIs with ease',
       icon: 'vuejs.png',
       id: 'vue'
     }
   ];
-
+  
   backendOptions = [
     {
       name: 'Express.js',
-      description: 'A minimal and flexible Node.js web application framework',
+      description: 'A minimal Node.js framework for building APIs',
       icon: 'node.png',
       id: 'express'
     },
     {
       name: 'Spring Boot',
-      description: 'A powerful framework for creating robust applications',
+      description: 'A Java framework for building production-ready apps',
       icon: 'springboot.png',
       id: 'spring'
     },
     {
       name: 'Django',
-      description: 'A high-level Python web framework',
+      description: 'A Python framework for rapid backend development',
       icon: 'django.png',
       id: 'django'
     }
   ];
-
+  
   databaseOptions = [
     {
       name: 'PostgreSQL',
-      description: 'A powerful, open source object-relational database system',
+      description: 'An advanced open-source relational database',
       icon: 'postgresql.png',
       id: 'postgresql'
     },
     {
       name: 'MongoDB',
-      description: 'A document-oriented NoSQL database',
+      description: 'A flexible NoSQL database using JSON-like documents',
       icon: 'mongo.png',
       id: 'mongodb'
     },
     {
       name: 'MySQL',
-      description: 'A popular open-source relational database management system',
+      description: 'A widely-used open-source relational database',
       icon: 'mysql.png',
       id: 'mysql'
     }
   ];
+  
+
 
   selectFrontend(option: any) {
     this.selectedFrontend = option;

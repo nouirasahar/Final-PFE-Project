@@ -8,10 +8,11 @@
 .hero {
   text-align: center;
   padding: 4rem 0;
+  background-color: #eeeefe;
 }
 
 .rapid-dev-label {
-  background-color: #ddcdf1;
+  background-color: #e8e0f3;
   color: #8b5cf6;
   padding: 0.5rem 1rem;
   border-radius: 1rem;
@@ -152,10 +153,11 @@ h2 {
 
 .feature-card {
   background: white;
-  padding: 2rem;
+  padding: 1.5rem; /* Reduced padding */
   border-radius: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 
 .feature-card h3 {
   font-size: 1.5rem;
@@ -166,7 +168,7 @@ h2 {
 
 .feature-card p {
   color: #6b7280;
-  line-height: 1.5;
+  line-height: 1;
 }
 
 /* How It Works Section */
