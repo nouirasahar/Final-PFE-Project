@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import { AdminComponent } from './admin/admin.component'; 
 import { SidebarComponent } from './sidebar/sidebar.component'; 
 import { ordersComponent } from './orders/orders.component'; 
-import { paymentsComponent } from './payments/payments.component'; 
 import { productsComponent } from './products/products.component'; 
 import { usersComponent } from './users/users.component'; 
 @Component({ 
@@ -11,7 +10,6 @@ import { usersComponent } from './users/users.component';
     standalone: true, 
     imports:[ 
     ordersComponent, 
-    paymentsComponent, 
     productsComponent, 
     usersComponent, 
     AdminComponent, 

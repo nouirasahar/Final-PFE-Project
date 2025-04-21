@@ -52,14 +52,12 @@ set "PASSWORD=%~4"
 set "PORT=%~5"
 
 
-
 :: Debugging: Print values to confirm they are correct 
 echo DB URI: %DB_URI%
 echo Database Name: %DB_NAME%
 echo Username: %USERNAME%
 echo Password: %PASSWORD%
 echo port: %PORT%
-
 
 :: Create package.json
 echo Creating package.json...
@@ -249,11 +247,13 @@ echo });>> "%ROUTE_FILE%"
 echo // Route to delete a table>> "%ROUTE_FILE%"
 echo router.delete('/deleteTable/:tableName', (req, res) =^> {>> "%ROUTE_FILE%"
 echo   const { tableName } = req.params;>> "%ROUTE_FILE%"
-
+echo   console.log^(`Demande de suppression de la table : ${tableName}`^);  >> "%ROUTE_FILE%"
 echo   deleteTable(tableName, (err, result) =^> {>> "%ROUTE_FILE%"
 echo     if (err) {>> "%ROUTE_FILE%"
+echo       console.error('Erreur lors de la suppression de la table:', err); >> "%ROUTE_FILE%"
 echo       return res.status(500).json({ message: 'Error deleting table', error: err });>> "%ROUTE_FILE%"
 echo     }>> "%ROUTE_FILE%"
+echo     console.log('Table supprimée avec succès:', result); >> "%ROUTE_FILE%"
 echo     res.status(200).json(result);>> "%ROUTE_FILE%"
 echo   });>> "%ROUTE_FILE%"
 echo });>> "%ROUTE_FILE%"
@@ -262,6 +262,10 @@ echo // Route to update  >>"%ROUTE_FILE%"
 echo router.put^('/update/:table/:id', ^(req, res^) =^> { >>"%ROUTE_FILE%"
 echo  const { table, id } = req.params; >>"%ROUTE_FILE%"
 echo  const updateData = req.body; >>"%ROUTE_FILE%"
+
+echo console.log(` Mise à jour demandée dans ${table} pour l'id ${id}`); >>"%ROUTE_FILE%"
+echo console.log(' Données reçues :', updateData); >>"%ROUTE_FILE%"
+
 echo  // Vérifie qu'on a bien des données à mettre à jour >>"%ROUTE_FILE%"
 echo  if ^(^!updateData ^|^| Object.keys^(updateData^).length === 0^) { >>"%ROUTE_FILE%"
 echo   return res.status(400).json({ error: 'Aucune donnée à mettre à jour' }); >>"%ROUTE_FILE%"
@@ -286,16 +290,33 @@ echo   res.status(200).json({ message: 'Mise à jour réussie', result }); >>"%R
 echo  }); >>"%ROUTE_FILE%"
 echo }); >>"%ROUTE_FILE%"
 
+echo // Route pour récupérer un seul item dans une table par ID >>"%ROUTE_FILE%"
+echo router.get^('/:table/:id', ^(req, res^) =^> { >>"%ROUTE_FILE%"
+echo  const { table, id } = req.params; >>"%ROUTE_FILE%"
+echo  const sql = `SELECT * FROM \`${table}\` WHERE id = ?`; >>"%ROUTE_FILE%"
+
+echo  db.query^(sql, [id], ^(err, results^) =^> { >>"%ROUTE_FILE%"
+echo    if ^(err^) { >>"%ROUTE_FILE%"
+echo      return res.status^(500^).json^({ message: 'Erreur serveur', error: err }^); >>"%ROUTE_FILE%"
+echo    } >>"%ROUTE_FILE%"
+
+echo    if ^(results.length === 0^) { >>"%ROUTE_FILE%"
+echo      return res.status^(404^).json^({ message: 'Aucun item trouvé avec cet ID' }^); >>"%ROUTE_FILE%"
+echo    } >>"%ROUTE_FILE%"
+
+echo    res.status^(200^).json^(results[0]^); >>"%ROUTE_FILE%"
+echo  }^); >>"%ROUTE_FILE%"
+echo }^); >>"%ROUTE_FILE%"
+
+
 echo module.exports = router; >> "%ROUTE_FILE%"
 echo apiRoutes created
-
 
 cd /d "%BACKEND_DIR%"
 echo // Installing dependencies, please wait!
 
 :: Run npm install and ensure the script continues
-call npm install express cors mysql2
-
+call npm install cors mysql2
 echo Dependencies installed successfully!
 
 :: Define script path

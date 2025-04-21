@@ -355,7 +355,7 @@ cd /d "%BACKEND_DIR%"
 echo // Installing dependencies, please wait!
 
 :: Run npm install and ensure the script continues
-call npm install
+call npm install cors express
 
 echo Dependencies installed successfully!
 

@@ -37,7 +37,7 @@ ngOnInit(): void {
    } 
 } 
 updateItem(): void { 
- this.service.updateTableData(this.table, this.itemData).subscribe({ 
+ this.service.updateTableData(this.table, this.itemId, this.itemData).subscribe({ 
    next: () => { 
     alert(`${this.table} updated successfully!`); 
     this.router.navigate([`/${this.table}`]); // Redirection 

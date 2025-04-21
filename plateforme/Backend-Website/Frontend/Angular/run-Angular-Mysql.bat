@@ -509,6 +509,7 @@ if not exist "%projectDir%" (
         echo export class %%iComponent implements OnInit { >> src\app\%%i\%%i.component.ts 
         echo   tables: string[] = []; >> src\app\%%i\%%i.component.ts
         echo   dataMap: any = {}; >> src\app\%%i\%%i.component.ts
+        echo   item: any; >> src\app\%%i\%%i.component.ts
         echo   constructor^(private service: SharedService, private router: Router^) {} >> src\app\%%i\%%i.component.ts
         echo   ngOnInit^(^): void { >> src\app\%%i\%%i.component.ts
         echo       this.service.getUsers^(^).subscribe(data =^> { >> src\app\%%i\%%i.component.ts
@@ -540,7 +541,7 @@ if not exist "%projectDir%" (
         echo } >> src\app\%%i\%%i.component.ts
 
         echo     update%%i^(%%i: any^): void { >> src\app\%%i\%%i.component.ts
-        echo     this.router.navigate^(['/update', '%%i', %%i._id]^); >> src\app\%%i\%%i.component.ts
+        echo     this.router.navigate^(['/update', '%%i', %%i.id]^); >> src\app\%%i\%%i.component.ts
         echo   } >> src\app\%%i\%%i.component.ts
 
         echo     delete%%i^(%%iId: string^): void { >> src\app\%%i\%%i.component.ts
@@ -549,7 +550,7 @@ if not exist "%projectDir%" (
         echo        response =^> { >> src\app\%%i\%%i.component.ts
         echo            console.log^('%%i deleted successfully', response^); >> src\app\%%i\%%i.component.ts
         echo            // Mise à jour de l'affichage des données après suppression >> src\app\%%i\%%i.component.ts
-        echo            this.dataMap['%%i'] = this.dataMap['%%i'].filter^(^(%%i: any^) =^> %%i._id !== %%iId^); >> src\app\%%i\%%i.component.ts
+        echo            this.dataMap['%%i'] = this.dataMap['%%i'].filter^(^(%%i: any^) =^> %%i.id !== %%iId^); >> src\app\%%i\%%i.component.ts
         echo            alert^('%%i Deleted!'^); >> src\app\%%i\%%i.component.ts
         echo        }, >> src\app\%%i\%%i.component.ts
         echo        error =^> { >> src\app\%%i\%%i.component.ts
@@ -576,7 +577,7 @@ if not exist "%projectDir%" (
         echo ^<td^>  >> src\app\%%i\%%i.component.html
         echo    ^<button ^(click^)="view%%i(row)"class="btn"^>^<i class="fas fa-eye"^>^</i^>View^</button^>  >> src\app\%%i\%%i.component.html
         echo    ^<button ^(click^)="update%%i(row)"class="btn"^>^<i class="fas fa-pencil-alt"^>^</i^>Update^</button^>  >> src\app\%%i\%%i.component.html
-        echo    ^<button ^(click^)="delete%%i(row._id)"class="btn"^>^<i class="fas fa-trash-alt"^>^</i^>delete^</button^>  >> src\app\%%i\%%i.component.html
+        echo    ^<button ^(click^)="delete%%i(row.id)"class="btn"^>^<i class="fas fa-trash-alt"^>^</i^>delete^</button^>  >> src\app\%%i\%%i.component.html
         echo ^</td^>  >> src\app\%%i\%%i.component.html
         echo ^</tr^> >> src\app\%%i\%%i.component.html
         echo ^</tbody^> >> src\app\%%i\%%i.component.html
@@ -685,7 +686,7 @@ if not exist "%projectDir%" (
     echo } >>src\app\update\update.component.ts
 
     echo updateItem^(^): void { >>src\app\update\update.component.ts
-    echo  this.service.updateTableData^(this.table, this.itemData^).subscribe^({ >>src\app\update\update.component.ts
+    echo  this.service.updateTableData^(this.table, this.itemId, this.itemData^).subscribe^({ >>src\app\update\update.component.ts
     echo    next: ^(^) =^> { >>src\app\update\update.component.ts
     echo     alert^(`${this.table} updated successfully!`^); >>src\app\update\update.component.ts
     echo     this.router.navigate^([`/${this.table}`]^); // Redirection >>src\app\update\update.component.ts
@@ -872,10 +873,9 @@ if not exist "%projectDir%" (
     echo  getItemById^(table: string, id: string^) { >> src\app\services\shared.service.ts
     echo   return this.http.get^(`${this.apiUrl}/${table}/${id}`^); >> src\app\services\shared.service.ts
     echo  } >> src\app\services\shared.service.ts
-    echo  updateTableData^(table: string, item: any^) { >> src\app\services\shared.service.ts
-    echo   return this.http.put^(`${this.apiUrl}/update/${table}/${item._id}`, item, { >> src\app\services\shared.service.ts
-    echo    headers: { 'Content-Type': 'application/json' }  //  Ensure JSON content type >> src\app\services\shared.service.ts
-    echo }^); >> src\app\services\shared.service.ts
+    echo  updateTableData^(table: string, id: string, data: any^) { >> src\app\services\shared.service.ts
+    echo   return this.http.put^(`${this.apiUrl}/update/${table}/${id}`, data^);>> src\app\services\shared.service.ts
+
     echo  } >> src\app\services\shared.service.ts
     echo  getTableData^(table: string^): Observable^<any[]^> { // Doit retourner un Observable >> src\app\services\shared.service.ts
     echo   return this.http.get^<any[]^>^(`${this.apiUrl}/getall/${table}`^); >> src\app\services\shared.service.ts
@@ -890,7 +890,7 @@ if not exist "%projectDir%" (
     echo }  >> src\app\services\shared.service.ts
 
     echo deleteTable^(table: string^): Observable^<any^> { >> src\app\services\shared.service.ts
-    echo   return this.http.delete^(`${this.apiUrl}/delete/${table}`^); >> src\app\services\shared.service.ts
+    echo   return this.http.delete^(`${this.apiUrl}/deleteTable/${table}`^); >> src\app\services\shared.service.ts
     echo }  >> src\app\services\shared.service.ts
     
     echo } >> src\app\services\shared.service.ts

@@ -9,10 +9,8 @@ export class SharedService {
  getItemById(table: string, id: string) { 
   return this.http.get(`${this.apiUrl}/${table}/${id}`); 
  } 
- updateTableData(table: string, item: any) { 
-  return this.http.put(`${this.apiUrl}/update/${table}/${item._id}`, item, { 
-   headers: { 'Content-Type': 'application/json' }  //  Ensure JSON content type 
-}); 
+ updateTableData(table: string, id: string, data: any) { 
+  return this.http.put(`${this.apiUrl}/update/${table}/${id}`, data);
  } 
  getTableData(table: string): Observable<any[]> { // Doit retourner un Observable 
   return this.http.get<any[]>(`${this.apiUrl}/getall/${table}`); 
@@ -26,6 +24,6 @@ deleteItem(table: string, id: string): Observable<any> {
   return this.http.delete(`${this.apiUrl}/delete/${table}/${id}`); 
 }  
 deleteTable(table: string): Observable<any> { 
-  return this.http.delete(`${this.apiUrl}/delete/${table}`); 
+  return this.http.delete(`${this.apiUrl}/deleteTable/${table}`); 
 }  
 } 

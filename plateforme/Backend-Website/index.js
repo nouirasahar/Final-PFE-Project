@@ -13,9 +13,8 @@ app.post("/", (req, res) => {
     console.log("Received POST request...");
     console.log("Parameters received:", { backend, DB_URI, dbName, username, password, frontend, port });
     const scriptPath = path.join(__dirname, "Backend", `${backend}`, `run-${backend}-${TypeDB}.bat`);
-    const scriptPath2 = path.join(__dirname, "Frontend", `${frontend}`, `run-${frontend}.bat`);
+    const scriptPath2 = path.join(__dirname, "Frontend", `${frontend}`, `run-${frontend}-${TypeDB}.bat`);
     if (backend) {
-        // Use correct escaping for Windows batch scripts
         const command = `cmd /c ""${scriptPath}" "${DB_URI}" "${dbName}" "${username}" "${password}" "${port}" "`;
 
         console.log(`Executing command: ${command}`);
@@ -32,7 +31,7 @@ app.post("/", (req, res) => {
     } else {
         res.json({ message: "No script execution required." });
     }if (frontend) {
-        // Wait for 60 seconds before executing the frontend script
+        // Wait for seconds before executing the frontend script
         setTimeout(() => {
             const command = `cmd /c "${scriptPath2}"`;
 
@@ -47,7 +46,7 @@ app.post("/", (req, res) => {
                 console.log("Batch Script Output:\n", stdout || stderr);
                 res.json({ message: "Frontend script executed", output: stdout || stderr });
             });
-        }, 25000); // 60 seconds delay
+        }, 23000); // delay
     } else {
         res.json({ message: "No frontend script execution required." });
     }

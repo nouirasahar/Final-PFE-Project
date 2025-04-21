@@ -69,10 +69,13 @@ router.delete('/delete/:table/:id', (req, res) => {
 // Route to delete a table
 router.delete('/deleteTable/:tableName', (req, res) => {
   const { tableName } = req.params;
+  console.log(`Demande de suppression de la table : ${tableName}`);  
   deleteTable(tableName, (err, result) => {
     if (err) {
+      console.error('Erreur lors de la suppression de la table:', err); 
       return res.status(500).json({ message: 'Error deleting table', error: err });
     }
+    console.log('Table supprimée avec succès:', result); 
     res.status(200).json(result);
   });
 });
@@ -80,6 +83,8 @@ router.delete('/deleteTable/:tableName', (req, res) => {
 router.put('/update/:table/:id', (req, res) => { 
  const { table, id } = req.params; 
  const updateData = req.body; 
+console.log(` Mise à jour demandée dans ${table} pour l'id ${id}`); 
+console.log(' Données reçues :', updateData); 
  // Vérifie qu'on a bien des données à mettre à jour 
  if (!updateData || Object.keys(updateData).length === 0) { 
   return res.status(400).json({ error: 'Aucune donnée à mettre à jour' }); 
@@ -101,6 +106,20 @@ router.put('/update/:table/:id', (req, res) => {
    return res.status(404).json({ message: 'Aucun enregistrement trouvé avec cet ID' }); 
   } 
   res.status(200).json({ message: 'Mise à jour réussie', result }); 
+ }); 
+}); 
+// Route pour récupérer un seul item dans une table par ID 
+router.get('/:table/:id', (req, res) => { 
+ const { table, id } = req.params; 
+ const sql = `SELECT * FROM \`${table}\` WHERE id = ?`; 
+ db.query(sql, [id], (err, results) => { 
+   if (err) { 
+     return res.status(500).json({ message: 'Erreur serveur', error: err }); 
+   } 
+   if (results.length === 0) { 
+     return res.status(404).json({ message: 'Aucun item trouvé avec cet ID' }); 
+   } 
+   res.status(200).json(results[0]); 
  }); 
 }); 
 module.exports = router; 

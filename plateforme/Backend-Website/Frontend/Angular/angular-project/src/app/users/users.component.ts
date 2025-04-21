@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class usersComponent implements OnInit {  
   tables: string[] = []; 
   dataMap: any = {}; 
+  item: any; 
   constructor(private service: SharedService, private router: Router) {} 
   ngOnInit(): void { 
       this.service.getUsers().subscribe(data => { 
@@ -42,7 +43,7 @@ export class usersComponent implements OnInit {
     alert(`Viewing users: ${JSON.stringify(users, null, 2)}`); 
 } 
     updateusers(users: any): void { 
-    this.router.navigate(['/update', 'users', users._id]); 
+    this.router.navigate(['/update', 'users', users.id]); 
   } 
     deleteusers(usersId: string): void { 
     console.log('Delete users ID:', usersId); 
@@ -50,7 +51,7 @@ export class usersComponent implements OnInit {
        response => { 
            console.log('users deleted successfully', response); 
            // Mise à jour de l'affichage des données après suppression 
-           this.dataMap['users'] = this.dataMap['users'].filter((users: any) => users._id !== usersId); 
+           this.dataMap['users'] = this.dataMap['users'].filter((users: any) => users.id !== usersId); 
            alert('users Deleted!'); 
        }, 
        error => { 
