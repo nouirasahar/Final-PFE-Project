@@ -1,0 +1,48 @@
+ /* here */
+.layout {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #d9ecff; /* very light blue */
+  
+    .content {
+      flex: 1;
+      margin-left: 250px;
+      padding: 20px;
+    }
+  }
+  /* Tablets and below */
+  @media (max-width: 768px) {
+    .layout {
+      flex-direction: column;
+      .sidebar {
+        position: relative;
+        width: 100%;
+        flex-direction: row;
+        padding: 10px;
+        h2 { font-size: 18px; margin: 0 10px 0 0; }
+        nav ul { display: flex; justify-content: space-around; flex: 1; li { margin: 0; } }
+      }
+      .content {
+        margin: 0;
+        padding: 10px;
+        .top-nav { flex-wrap: wrap; a { margin: 5px; font-size: 14px; } }
+      }
+    }
+  }
+  
+  /* Phones and below */
+  @media (max-width: 480px) {
+    .layout {
+      .sidebar { display: none; }  /* hide sidebar entirely */
+      .content {
+        margin: 0;
+        .top-nav {
+          justify-content: center;
+          a { flex: 1 0 45%; text-align: center; padding: 8px; font-size: 13px; }
+        }
+      }
+    }
+  }
+  
