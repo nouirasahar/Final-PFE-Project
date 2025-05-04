@@ -25,7 +25,7 @@ if errorlevel 1 (
 set items=
 
 :: Parse the JSON to extract table names
-::delims = "delimiters" (by default, space or tab)
+::delims = "delimiters (by default, space or tab)
 for /f "delims=" %%i in ('findstr /r /c:"\".*\"" "%jsonFile%"') do (
     set name=%%i
     set name=!name:"=!
@@ -34,6 +34,9 @@ for /f "delims=" %%i in ('findstr /r /c:"\".*\"" "%jsonFile%"') do (
     set name=!name:]=!
     set name=!name:_=!
     set name=!name:-=!
+    set name=!name:.=!
+    set name=!name:'=!
+    set name=!name:`=!
     set items=!items! !name!
 )
 
@@ -52,6 +55,13 @@ if not exist "%projectDir%" (
     echo Creating Angular project...
     ng new %projectName% --routing --style=scss --skip-install --defaults
     cd "%projectDir%"
+    ::STYLE.SCSS
+    echo body { > src\styles.scss
+    echo background: #d9ecff ;>> src\styles.scss
+    echo margin: 0;>> src\styles.scss
+    echo padding: 0;>> src\styles.scss
+    echo font-family: Arial, sans-serif;>> src\styles.scss
+    echo }>> src\styles.scss
     :: Génération du fichier app.config.ts
     echo import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core'; > src\app\app.config.ts
     echo import { provideRouter } from '@angular/router'; >> src\app\app.config.ts
@@ -85,9 +95,11 @@ if not exist "%projectDir%" (
     echo    ^<app-sidebar^>^</app-sidebar^> >> src\app\app.component.html
     echo    ^<div class="content"^> >> src\app\app.component.html
     echo     ^<nav^> >> src\app\app.component.html
-    echo      ^<a routerLink="/admin" routerLinkActive="active-link"^>Admin^</a^> ^|>> src\app\app.component.html
+    echo      ^<a routerLink="/admin" routerLinkActive="active-link"^>^</a^> >> src\app\app.component.html
     for %%i in (%items%) do (
-        echo   ^<a routerLink="/%%i"^>%%i^</a^> ^| >> src\app\app.component.html)
+        echo   ^<a routerLink="/%%i"^>^</a^> >> src\app\app.component.html)
+    echo       ^<!-- Search Bar --^> >> src\app\app.component.html
+    echo     ^<input type="text" placeholder="🔍Search..." class="search-bar" /^> >> src\app\app.component.html
     echo     ^</nav^> >> src\app\app.component.html
     echo    ^<router-outlet^>^</router-outlet^>  >> src\app\app.component.html
     echo    ^</div^> >> src\app\app.component.html
@@ -123,92 +135,58 @@ if not exist "%projectDir%" (
     )
     ::creating app.component.scss
     echo /* General Layout */  > src\app\app.component.scss
-    echo  .layout { >> src\app\app.component.scss
-    echo  display: flex; >> src\app\app.component.scss
-    echo  height: 100vh; /* Full viewport height */ >> src\app\app.component.scss
-    echo  margin: 0; >> src\app\app.component.scss
-    echo  padding: 0; >> src\app\app.component.scss
+    echo .layout { >> src\app\app.component.scss
+    echo     display: flex; >> src\app\app.component.scss
+    echo     height: 100vh; >> src\app\app.component.scss
+    echo     margin: 0; >> src\app\app.component.scss
+    echo     padding: 0; >> src\app\app.component.scss
+    echo     background-color: #d9ecff; >> src\app\app.component.scss
+    echo     .content { >> src\app\app.component.scss
+    echo         flex: 1; >> src\app\app.component.scss
+    echo         margin-left: 200px; >> src\app\app.component.scss
+    echo         padding: 30px; >> src\app\app.component.scss
+    echo     } >> src\app\app.component.scss
+    echo     .search-bar {>> src\app\app.component.scss
+    echo         padding: 8px 16px;>> src\app\app.component.scss
+    echo         margin-left: auto;>> src\app\app.component.scss
+    echo         border-radius: 50px;>> src\app\app.component.scss
+    echo         border: 1px solid #ccc;>> src\app\app.component.scss
+    echo         font-size: 14px;>> src\app\app.component.scss
+    echo         width: 220px;>> src\app\app.component.scss
+    echo         outline: none;>> src\app\app.component.scss
+    echo         background-color: #fff;>> src\app\app.component.scss
+    echo         box-shadow: 0 2px 4px rgba^(0,0,0,0.1^);>> src\app\app.component.scss
+    echo         }>> src\app\app.component.scss
     echo } >> src\app\app.component.scss
-
-    echo /* Sidebar Styling */ >> src\app\app.component.scss
-    echo  .sidebar { >> src\app\app.component.scss
-    echo  width: 250px; >> src\app\app.component.scss
-    echo  height: 100vh; >> src\app\app.component.scss
-    echo  background-color: #003256;; /* Blue background */ >> src\app\app.component.scss
-    echo  color: white; >> src\app\app.component.scss
-    echo  position: fixed; >> src\app\app.component.scss
-    echo  top: 0; >> src\app\app.component.scss
-    echo  left: 0; >> src\app\app.component.scss
-    echo  display: flex; >> src\app\app.component.scss
-    echo  flex-direction: column; >> src\app\app.component.scss
-    echo  padding-top: 20px; >> src\app\app.component.scss
-    echo  box-shadow: 2px 0 5px rgba^(0, 0, 0, 0.1^); >> src\app\app.component.scss
-    echo }  >> src\app\app.component.scss
-
-    echo  .sidebar h2 { >> src\app\app.component.scss
-    echo  font-size: 22px; >> src\app\app.component.scss
-    echo  margin-bottom: 20px; >> src\app\app.component.scss
-    echo  text-transform: uppercase; >> src\app\app.component.scss
-    echo  color: #ecf0f1; >> src\app\app.component.scss
+    echo @media ^(max-width: 768px^) { >> src\app\app.component.scss
+    echo     .layout { >> src\app\app.component.scss
+    echo         flex-direction: column; >> src\app\app.component.scss
+    echo         .sidebar { >> src\app\app.component.scss
+    echo             position: relative; >> src\app\app.component.scss
+    echo             width: 100%%; >> src\app\app.component.scss
+    echo             flex-direction: row; >> src\app\app.component.scss
+    echo             padding: 10px; >> src\app\app.component.scss
+    echo             h2 { font-size: 18px; margin: 0 10px 0 0; } >> src\app\app.component.scss
+    echo             nav ul { display: flex; justify-content: space-around; flex: 1; li { margin: 0; } } >> src\app\app.component.scss
+    echo         } >> src\app\app.component.scss
+    echo         .content { >> src\app\app.component.scss
+    echo             margin : 0; >> src\app\app.component.scss
+    echo             padding: 10px; >> src\app\app.component.scss
+    echo             .top-nav { flex-wrap: wrap; a { margin: 5px; font-size: 14px; } } >> src\app\app.component.scss
+    echo         } >> src\app\app.component.scss
+    echo     } >> src\app\app.component.scss
     echo } >> src\app\app.component.scss
-
-    echo  .sidebar nav ul { >> src\app\app.component.scss
-    echo  list-style: none; >> src\app\app.component.scss
-    echo  padding: 0; >> src\app\app.component.scss
-    echo  width: 100%%; >> src\app\app.component.scss
-    echo } >> src\app\app.component.scss
-
-    echo .sidebar nav ul li { >> src\app\app.component.scss
-    echo  margin: 15px 0; >> src\app\app.component.scss
-    echo } >> src\app\app.component.scss
-
-    echo .sidebar nav ul li a { >> src\app\app.component.scss
-    echo  text-decoration: none; >> src\app\app.component.scss
-    echo  color: #ecf0f1; >> src\app\app.component.scss
-    echo  font-size: 16px; >> src\app\app.component.scss
-    echo  padding: 10px 20px; >> src\app\app.component.scss
-    echo  display: block; >> src\app\app.component.scss
-    echo  border-radius: 4px; >> src\app\app.component.scss
-    echo  transition: background-color 0.3s ease; >> src\app\app.component.scss
-    echo } >> src\app\app.component.scss
-
-    echo .sidebar nav ul li a:hover, >> src\app\app.component.scss
-    echo .sidebar nav ul li a.active-link { >> src\app\app.component.scss
-    echo  background-color: #34495e; >> src\app\app.component.scss
-    echo } >> src\app\app.component.scss
-
-    echo /* Content Styling */ >> src\app\app.component.scss
-    echo  .content { >> src\app\app.component.scss
-    echo  flex-grow: 1; >> src\app\app.component.scss
-    echo  margin-left: 130px; /* Matches sidebar width */ >> src\app\app.component.scss
-    echo  padding: 20px; >> src\app\app.component.scss
-    echo  background-color: #f4f7fa; /* Light background for contrast */ >> src\app\app.component.scss
-    echo  overflow-y: auto; >> src\app\app.component.scss
-    echo } >> src\app\app.component.scss
-
-    echo /* Top Navigation Styling */ >> src\app\app.component.scss
-    echo  .top-nav { >> src\app\app.component.scss
-    echo  display: flex; >> src\app\app.component.scss
-    echo  justify-content: flex-start; >> src\app\app.component.scss
-    echo  background-color: #ecf0f1; >> src\app\app.component.scss
-    echo  padding: 10px 20px; >> src\app\app.component.scss
-    echo  border-bottom: 2px solid #ccc; >> src\app\app.component.scss
-    echo  margin-bottom: 20px; >> src\app\app.component.scss
-    echo } >> src\app\app.component.scss
-
-    echo .top-nav a { >> src\app\app.component.scss
-    echo  text-decoration: none; >> src\app\app.component.scss
-    echo  color: #2c3e50; >> src\app\app.component.scss
-    echo  margin-right: 15px; >> src\app\app.component.scss
-    echo  font-size: 16px; >> src\app\app.component.scss
-    echo  font-weight: bold; >> src\app\app.component.scss
-    echo  transition: color 0.3s ease, border-bottom 0.3s ease; >> src\app\app.component.scss
-    echo } >> src\app\app.component.scss
-
-    echo .top-nav a:hover, >> src\app\app.component.scss
-    echo .top-nav a.active-link { >> src\app\app.component.scss
-    echo  color: #007bff; /* Highlight color */ >> src\app\app.component.scss
-    echo  border-bottom: 2px solid #007bff; >> src\app\app.component.scss
+    echo @media ^(max-width: 480px^) { >> src\app\app.component.scss
+    echo     .layout { >> src\app\app.component.scss
+    echo         .sidebar { display: none; }  /* hide sidebar entirely */ >> src\app\app.component.scss
+    echo         .content { >> src\app\app.component.scss
+    echo             margin: 0; >> src\app\app.component.scss
+    echo             .top-nav { >> src\app\app.component.scss
+    echo                 justify-content: center; >> src\app\app.component.scss
+    echo                 a { flex: 1 0 45%%; text-align: center; padding: 8px; font-size: 13px; } >> src\app\app.component.scss
+    echo             } >> src\app\app.component.scss
+    echo         } >> src\app\app.component.scss
+    echo     } >> src\app\app.component.scss
     echo } >> src\app\app.component.scss
 
     echo Angular project "%projectName%" created successfully.
@@ -221,7 +199,7 @@ if not exist "%projectDir%" (
     ng g c update
     ::creating admin.component.html
     echo ^<div class="admin-dashboard"^> >src\app\admin\admin.component.html
-    echo ^<p^>Admin Dashboard^</p^> >>src\app\admin\admin.component.html
+    echo ^<p^>⚙️Admin Dashboard^</p^> >>src\app\admin\admin.component.html
     echo ^<table border="1"^>  >>src\app\admin\admin.component.html
     echo   ^<thead^> >>src\app\admin\admin.component.html
     echo     ^<tr^> >>src\app\admin\admin.component.html
@@ -245,125 +223,90 @@ if not exist "%projectDir%" (
     echo ^</table^> >>src\app\admin\admin.component.html
     echo ^</div^>
     ::creating admin.scss
-    echo  /* General Styling */ >src\app\admin\admin.component.Scss
-    echo body { >>src\app\admin\admin.component.Scss
-    echo margin: 0; >>src\app\admin\admin.component.Scss
-    echo padding: 0; >>src\app\admin\admin.component.Scss
-    echo background: linear-gradient^(135deg, #e8e8e8, #f4f4f4^); /* Light gray gradient */ >>src\app\admin\admin.component.Scss
-    echo font-family: 'Arial', sans-serif; >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
-  
-    echo .admin-dashboard { >>src\app\admin\admin.component.Scss
-    echo background-color: #ffffff; /* White background for the dashboard */ >>src\app\admin\admin.component.Scss
-    echo padding: 20px; >>src\app\admin\admin.component.Scss
-    echo border-radius: 12px; >>src\app\admin\admin.component.Scss
-    echo box-shadow: 0 4px 8px rgba^(0, 0, 0, 0.1^); /* Soft shadow for card effect */ >>src\app\admin\admin.component.Scss
-    echo margin: 20px; >>src\app\admin\admin.component.Scss
-    echo max-width: 80%%; >>src\app\admin\admin.component.Scss
-    echo margin-left: auto; >>src\app\admin\admin.component.Scss
-    echo margin-right: auto; >>src\app\admin\admin.component.Scss
-    echo font-family: 'Arial', sans-serif; >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
+    echo  /* admin styling*/ >src\app\admin\admin.component.Scss
+    echo .admin-dashboard { >>src\app\admin\admin.component.scss
+    echo   background: #edf6ff; >>src\app\admin\admin.component.scss
+    echo   margin: 20px auto; >>src\app\admin\admin.component.scss
+    echo   max-width: 80%%; >>src\app\admin\admin.component.scss
+    echo   padding: 30px; >>src\app\admin\admin.component.scss
+    echo   border-radius: 19px; >>src\app\admin\admin.component.scss
+    echo   box-shadow: 0 4px 8px rgba^(0,0,0,0.1^); >>src\app\admin\admin.component.scss
+    echo   p { >>src\app\admin\admin.component.scss
+    echo     text-align: center; >>src\app\admin\admin.component.scss
+    echo     font: bold 28px Arial, sans-serif; >>src\app\admin\admin.component.scss
+    echo     margin-bottom: 20px; >>src\app\admin\admin.component.scss
+    echo     color: #34495e; >>src\app\admin\admin.component.scss
+    echo   } >>src\app\admin\admin.component.scss
+    echo   table { >>src\app\admin\admin.component.scss
+    echo     width: 100%%; >>src\app\admin\admin.component.scss
+    echo     margin-top: 10px; >>src\app\admin\admin.component.scss
+    echo     border-collapse: collapse; >>src\app\admin\admin.component.scss
+    echo     border-radius: 8px; >>src\app\admin\admin.component.scss
+    echo     overflow: hidden; >>src\app\admin\admin.component.scss
+    echo     box-shadow: 0 2px 4px rgba^(0,0,0,0.1^); >>src\app\admin\admin.component.scss
+    echo     thead { >>src\app\admin\admin.component.scss
+    echo       background: #014e85; >>src\app\admin\admin.component.scss
+    echo       color: #fff; >>src\app\admin\admin.component.scss
+    echo       th { >>src\app\admin\admin.component.scss
+    echo         padding: 12px 16px; >>src\app\admin\admin.component.scss
+    echo         font-size: 16px; >>src\app\admin\admin.component.scss
+    echo         ^&:nth-child^(2^) { text-align: center; } >>src\app\admin\admin.component.scss
+    echo       } >>src\app\admin\admin.component.scss
+    echo     } >>src\app\admin\admin.component.scss
+    echo     tbody { >>src\app\admin\admin.component.scss
+    echo       tr { >>src\app\admin\admin.component.scss
+    echo         transition: background .2s; >>src\app\admin\admin.component.scss
+    echo         ^&:nth-child^(even^) { background: #f9f9f9; } >>src\app\admin\admin.component.scss
+    echo         ^&:hover { background: #eaf2f8; } >>src\app\admin\admin.component.scss
+    echo         td { >>src\app\admin\admin.component.scss
+    echo           padding: 12px 16px; >>src\app\admin\admin.component.scss
+    echo           font-size: 14px; >>src\app\admin\admin.component.scss
+    echo           border-bottom: 1px solid #ddd; >>src\app\admin\admin.component.scss
+    echo           ^&:nth-child^(2^) { text-align: center; } >>src\app\admin\admin.component.scss
+    echo         } >>src\app\admin\admin.component.scss
+    echo       } >>src\app\admin\admin.component.scss
+    echo     } >>src\app\admin\admin.component.scss
+    echo   } >>src\app\admin\admin.component.scss
+    echo   .btn { >>src\app\admin\admin.component.scss
+    echo     background: #d6eaff; >>src\app\admin\admin.component.scss
+    echo     color: #34495e; >>src\app\admin\admin.component.scss
+    echo     border: 1px solid #a9d5ff; >>src\app\admin\admin.component.scss
+    echo     padding: 7px 55px; >>src\app\admin\admin.component.scss
+    echo     font-size: 14px; >>src\app\admin\admin.component.scss
+    echo     border-radius: 6px; >>src\app\admin\admin.component.scss
+    echo     cursor: pointer; >>src\app\admin\admin.component.scss
+    echo     transition: .3s; >>src\app\admin\admin.component.scss
+    echo     margin: 0 6px; >>src\app\admin\admin.component.scss
+    echo     display: inline-flex; >>src\app\admin\admin.component.scss
+    echo     align-items: center; >>src\app\admin\admin.component.scss
+    echo     justify-content: center; >>src\app\admin\admin.component.scss
+    echo     gap: 6px; >>src\app\admin\admin.component.scss
+    echo     i { font-size: 16px; } >>src\app\admin\admin.component.scss
+    echo     ^&:hover { >>src\app\admin\admin.component.scss
+    echo       background: #b8d8ff; >>src\app\admin\admin.component.scss
+    echo       transform: translateY^(-2px^); >>src\app\admin\admin.component.scss
+    echo       box-shadow: 0 2px 4px rgba^(0,0,0,0.1^); >>src\app\admin\admin.component.scss
+    echo     } >>src\app\admin\admin.component.scss
+    echo     ^& ^+ ^& { margin-left: 12px; } >>src\app\admin\admin.component.scss
+    echo   } >>src\app\admin\admin.component.scss
+    echo   @media ^(max-width: 768px^) { >>src\app\admin\admin.component.scss
+    echo     padding: 10px; >>src\app\admin\admin.component.scss
+    echo     margin: 10px; >>src\app\admin\admin.component.scss
+    echo     p { font-size: 24px; } >>src\app\admin\admin.component.scss
+    echo     table { >>src\app\admin\admin.component.scss
+    echo       thead th, tbody td { >>src\app\admin\admin.component.scss
+    echo         padding: 8px 10px; >>src\app\admin\admin.component.scss
+    echo         font-size: 13px; >>src\app\admin\admin.component.scss
+    echo       } >>src\app\admin\admin.component.scss
+    echo     } >>src\app\admin\admin.component.scss
+    echo     .btn { >>src\app\admin\admin.component.scss
+    echo       display: block; >>src\app\admin\admin.component.scss
+    echo       width: 100%%; >>src\app\admin\admin.component.scss
+    echo       margin: 5px 0; >>src\app\admin\admin.component.scss
+    echo     } >>src\app\admin\admin.component.scss
+    echo   } >>src\app\admin\admin.component.scss
+    echo } >>src\app\admin\admin.component.scss
 
-    echo .admin-dashboard p { >>src\app\admin\admin.component.Scss
-    echo font-size: 28px; >>src\app\admin\admin.component.Scss
-    echo font-weight: bold; >>src\app\admin\admin.component.Scss
-    echo margin-bottom: 20px; >>src\app\admin\admin.component.Scss
-    echo color: #34495e; /* Dark blue-grey text */ >>src\app\admin\admin.component.Scss
-    echo text-align: center; >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
-
-    echo /* Table Styling */ >>src\app\admin\admin.component.Scss
-    echo .admin-dashboard table { >>src\app\admin\admin.component.Scss
-    echo width: 100%%; >>src\app\admin\admin.component.Scss
-    echo border-collapse: collapse; >>src\app\admin\admin.component.Scss
-    echo background: white; >>src\app\admin\admin.component.Scss
-    echo border-radius: 8px; >>src\app\admin\admin.component.Scss
-    echo overflow: hidden; >>src\app\admin\admin.component.Scss
-    echo margin-top: 10px; >>src\app\admin\admin.component.Scss
-    echo box-shadow: 0 2px 4px rgba^(0, 0, 0, 0.1^); /* Subtle shadow */ >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
-
-    echo .admin-dashboard table thead { >>src\app\admin\admin.component.Scss
-    echo background-color: #003256; /* Dark blue-grey for header */ >>src\app\admin\admin.component.Scss
-    echo color: white; >>src\app\admin\admin.component.Scss
-    echo -align: left; >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
-
-    echo .admin-dashboard table thead th { >>src\app\admin\admin.component.Scss
-    echo padding: 12px 16px; >>src\app\admin\admin.component.Scss
-    echo -size: 16px; >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
-
-    echo .admin-dashboard table tbody tr { >>src\app\admin\admin.component.Scss
-    echo transition: background-color 0.2s ease; >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
-
-    echo .admin-dashboard table tbody tr:nth-child^(even^) { >>src\app\admin\admin.component.Scss
-    echo background-color: #f9f9f9; /* Alternate row colors */ >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
-
-    echo .admin-dashboard table tbody tr:hover { >>src\app\admin\admin.component.Scss
-    echo background-color: #eaf2f8; /* Light blue hover effect */ >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
-
-    echo .admin-dashboard table tbody td { >>src\app\admin\admin.component.Scss
-    echo padding: 12px 16px; >>src\app\admin\admin.component.Scss
-    echo font-size: 14px; >>src\app\admin\admin.component.Scss
-    echo border-bottom: 1px solid #ddd; /* Subtle borders */ >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
-
-    echo /* Button Styling */ >>src\app\admin\admin.component.Scss
-    echo .admin-dashboard .btn { >>src\app\admin\admin.component.Scss
-    echo background-color: #d6eaff; /* Light blue button color */ >>src\app\admin\admin.component.Scss
-    echo color: #34495e; /* Dark text for contrast */ >>src\app\admin\admin.component.Scss
-    echo border: 1px solid #a9d5ff; /* Slight border for depth */ >>src\app\admin\admin.component.Scss
-    echo padding: 8px 12px; >>src\app\admin\admin.component.Scss
-    echo font-size: 14px; >>src\app\admin\admin.component.Scss
-    echo border-radius: 6px; >>src\app\admin\admin.component.Scss
-    echo cursor: pointer; >>src\app\admin\admin.component.Scss
-    echo transition: all 0.3s ease; >>src\app\admin\admin.component.Scss
-    echo margin: 0 8px; /* Add spacing between buttons */ >>src\app\admin\admin.component.Scss
-    echo display: inline-flex; >>src\app\admin\admin.component.Scss
-    echo align-items: center; >>src\app\admin\admin.component.Scss
-    echo gap: 6px; >>src\app\admin\admin.component.Scss
-    echo } >>src\app\admin\admin.component.Scss
-
-    echo .admin-dashboard .btn:hover { >>src\app\admin\admin.component.Scss
-    echo background-color: #b8d8ff; /* Slightly darker blue on hover */>>src\app\admin\admin.component.Scss
-    echo transform: translateY^(-2px^); /* Subtle lift effect */>>src\app\admin\admin.component.Scss
-    echo box-shadow: 0 2px 4px rgba^(0, 0, 0, 0.1^);>>src\app\admin\admin.component.Scss
-    echo }>>src\app\admin\admin.component.Scss
-
-    echo .admin-dashboard .btn i {>>src\app\admin\admin.component.Scss
-    echo font-size: 16px;>>src\app\admin\admin.component.Scss
-    echo }>>src\app\admin\admin.component.Scss
-
-    echo  /* Responsive Design */ >>src\app\admin\admin.component.Scss
-    echo @media ^(^max-width: 768px^)^ { >>src\app\admin\admin.component.Scss
-    echo   .admin-dashboard { >>src\app\admin\admin.component.Scss
-    echo   padding: 10px; >>src\app\admin\admin.component.Scss
-    echo   margin: 10px; >>src\app\admin\admin.component.Scss
-    echo }>>src\app\admin\admin.component.Scss
-    echo }>>src\app\admin\admin.component.Scss
-    echo /* Button Styling */ >>src\app\admin\admin.component.Scss
-    echo .admin-dashboard .btn { >>src\app\admin\admin.component.Scss
-    echo background-color: #d6eaff; /* Light blue button color */ >>src\app\admin\admin.component.Scss
-    echo color: #34495e; /* Dark text for contrast */ >>src\app\admin\admin.component.Scss
-    echo border: 1px solid #a9d5ff; /* Slight border for depth */ >>src\app\admin\admin.component.Scss
-    echo padding: 8px 12px; >>src\app\admin\admin.component.Scss
-    echo font-size: 14px; >>src\app\admin\admin.component.Scss
-    echo border-radius: 6px; >>src\app\admin\admin.component.Scss
-    echo cursor: pointer; >>src\app\admin\admin.component.Scss
-    echo transition: all 0.3s ease; >>src\app\admin\admin.component.Scss
-    echo margin: 0 15px; /* Add spacing between buttons */ >>src\app\admin\admin.component.Scss
-    echo display: inline-flex; >>src\app\admin\admin.component.Scss
-    echo align-items: center; >>src\app\admin\admin.component.Scss
-    echo width: 40%%; >>src\app\admin\admin.component.Scss
-    echo align-items: center; /* Center the content vertically */ >>src\app\admin\admin.component.Scss
-    echo text-align: center; /* Ensure the text is centered */ >>src\app\admin\admin.component.Scss
-    echo justify-content: center; /* Center the content horizontally */ >>src\app\admin\admin.component.Scss 
-    echo } >>src\app\admin\admin.component.Scss
     ::creating admin component.ts
     echo import { Component, OnInit } from '@angular/core'; >src\app\admin\admin.component.ts
     echo import { SharedService } from '../services/shared.service'; >>src\app\admin\admin.component.ts
@@ -418,65 +361,120 @@ if not exist "%projectDir%" (
     echo }>>src\app\admin\admin.component.ts
     echo }>>src\app\admin\admin.component.ts
     :: creating sidebar.component.html
-    echo ^<p^>sidebar works!^</p^> >src\app\sidebar\sidebar.component.html 
-    echo ^<div^ class="sidebar"^> >>src\app\sidebar\sidebar.component.html 
+    echo ^<div^ class="sidebar"^> >src\app\sidebar\sidebar.component.html 
     echo ^<h2^>Admin Panel^</h2^> >>src\app\sidebar\sidebar.component.html
     echo ^<nav^> >>src\app\sidebar\sidebar.component.html
     echo ^<ul^> >>src\app\sidebar\sidebar.component.html
-    echo   ^<li^>^<button^ ^(click^)="navigateToDashboard()" class="nav-button"^>Dashboard^</button^>^</li^> >>src\app\sidebar\sidebar.component.html
+    echo   ^<li^>^<button^ ^(click^)="navigateToDashboard()" class="nav-button"^>🛠️Dashboard^</button^>^</li^> >>src\app\sidebar\sidebar.component.html
     echo ^</ul^> >>src\app\sidebar\sidebar.component.html
     echo ^</nav^> >>src\app\sidebar\sidebar.component.html
     echo ^</div^> >>src\app\sidebar\sidebar.component.html
     :: creating sidebar.component.scss
     echo /* Sidebar Styling */ >src\app\sidebar\sidebar.component.scss
-    echo  .sidebar { >>src\app\sidebar\sidebar.component.scss
-    echo  width: 190px; >>src\app\sidebar\sidebar.component.scss
-    echo  height: 100vh; >>src\app\sidebar\sidebar.component.scss
-    echo  background-color: #003256; /* Blue background */ >>src\app\sidebar\sidebar.component.scss
-    echo  color: white; >>src\app\sidebar\sidebar.component.scss
-    echo  position: fixed; /* Keep it fixed on the left */ >>src\app\sidebar\sidebar.component.scss
-    echo  top: 0; >>src\app\sidebar\sidebar.component.scss
-    echo  left: 0; >>src\app\sidebar\sidebar.component.scss
-    echo  display: flex; >>src\app\sidebar\sidebar.component.scss
-    echo  flex-direction: column; >>src\app\sidebar\sidebar.component.scss
-    echo  align-items: center; >>src\app\sidebar\sidebar.component.scss
-    echo  padding-top: 20px; >>src\app\sidebar\sidebar.component.scss
-    echo  box-shadow: 2px 0 5px rgba^(0, 0, 0, 0.1^); >>src\app\sidebar\sidebar.component.scss
-    echo } >>src\app\sidebar\sidebar.component.scss
+    echo .sidebar { >> src\app\sidebar\sidebar.component.scss
+    echo     width: 200px; >> src\app\sidebar\sidebar.component.scss
+    echo     height: 100vh; >> src\app\sidebar\sidebar.component.scss
+    echo     background: #014e85; >> src\app\sidebar\sidebar.component.scss
+    echo     color: #ecf0f1; >> src\app\sidebar\sidebar.component.scss
+    echo     position: fixed; >> src\app\sidebar\sidebar.component.scss
+    echo     top: 0; >> src\app\sidebar\sidebar.component.scss
+    echo     left: 0; >> src\app\sidebar\sidebar.component.scss
+    echo     display: flex; >> src\app\sidebar\sidebar.component.scss
+    echo     flex-direction: column; >> src\app\sidebar\sidebar.component.scss
+    echo     align-items: center; >> src\app\sidebar\sidebar.component.scss
+    echo     padding: 16px 0; >> src\app\sidebar\sidebar.component.scss
+    echo     box-shadow: 2px 0 8px rgba^(0, 0, 0, 0.25^); >> src\app\sidebar\sidebar.component.scss
+    echo     h2 { >> src\app\sidebar\sidebar.component.scss
+    echo         font-size: 18px; >> src\app\sidebar\sidebar.component.scss
+    echo         margin: 0 0 16px; >> src\app\sidebar\sidebar.component.scss
+    echo         text-transform: uppercase; >> src\app\sidebar\sidebar.component.scss
+    echo         letter-spacing: 0.5px; >> src\app\sidebar\sidebar.component.scss
+    echo     } >> src\app\sidebar\sidebar.component.scss
+    echo     nav ul { >> src\app\sidebar\sidebar.component.scss
+    echo         list-style: none; >> src\app\sidebar\sidebar.component.scss
+    echo         padding: 0; >> src\app\sidebar\sidebar.component.scss
+    echo         width: 100%%; >> src\app\sidebar\sidebar.component.scss
+    echo         display: flex; >> src\app\sidebar\sidebar.component.scss
+    echo         flex-direction: column; >> src\app\sidebar\sidebar.component.scss
+    echo         li { >> src\app\sidebar\sidebar.component.scss
+    echo             margin: 10px 0; >> src\app\sidebar\sidebar.component.scss
+    echo             a { >> src\app\sidebar\sidebar.component.scss
+    echo                 display: block; >> src\app\sidebar\sidebar.component.scss
+    echo                 padding: 8px 14px; >> src\app\sidebar\sidebar.component.scss
+    echo                 text-decoration: none; >> src\app\sidebar\sidebar.component.scss
+    echo                 color: inherit; >> src\app\sidebar\sidebar.component.scss
+    echo                 font-size: 14px; >> src\app\sidebar\sidebar.component.scss
+    echo                 border-radius: 6px; >> src\app\sidebar\sidebar.component.scss
+    echo                 transition: background 0.3s; >> src\app\sidebar\sidebar.component.scss
+    echo                 ^&:hover, ^&.active-link { background: #1a4d75; } >> src\app\sidebar\sidebar.component.scss
+    echo             } >> src\app\sidebar\sidebar.component.scss
+    echo             .nav-button { >> src\app\sidebar\sidebar.component.scss
+    echo                 display: block; >> src\app\sidebar\sidebar.component.scss
+    echo                 padding: 8px 14px; >> src\app\sidebar\sidebar.component.scss
+    echo                 background: #fff; >> src\app\sidebar\sidebar.component.scss
+    echo                 color: #014e85; >> src\app\sidebar\sidebar.component.scss
+    echo                 border: none; >> src\app\sidebar\sidebar.component.scss
+    echo                 border-radius: 30px; >> src\app\sidebar\sidebar.component.scss
+    echo                 font-size: 14px; >> src\app\sidebar\sidebar.component.scss
+    echo                 cursor: pointer; >> src\app\sidebar\sidebar.component.scss
+    echo                 width: 100%%; >> src\app\sidebar\sidebar.component.scss
+    echo                 text-align: left; >> src\app\sidebar\sidebar.component.scss
+    echo                 box-shadow: 0 2px 5px rgba^(0, 0, 0, 0.15^); >> src\app\sidebar\sidebar.component.scss
+    echo                 transition: 0.3s; >> src\app\sidebar\sidebar.component.scss
+    echo                 ^&:hover { >> src\app\sidebar\sidebar.component.scss
+    echo                     background: #ecf0f1; >> src\app\sidebar\sidebar.component.scss
+    echo                     box-shadow: 0 4px 8px rgba^(0, 0, 0, 0.2^); >> src\app\sidebar\sidebar.component.scss
+    echo                 } >> src\app\sidebar\sidebar.component.scss
+    echo             } >> src\app\sidebar\sidebar.component.scss
+    echo         } >> src\app\sidebar\sidebar.component.scss
+    echo     } >> src\app\sidebar\sidebar.component.scss
+    echo } >> src\app\sidebar\sidebar.component.scss
+    echo @media ^(max-width: 768px^) { >> src\app\sidebar\sidebar.component.scss
+    echo     .sidebar { >> src\app\sidebar\sidebar.component.scss
+    echo         width: 100%%; >> src\app\sidebar\sidebar.component.scss
+    echo         height: auto; >> src\app\sidebar\sidebar.component.scss
+    echo         position: relative; >> src\app\sidebar\sidebar.component.scss
+    echo         flex-direction: row; >> src\app\sidebar\sidebar.component.scss
+    echo         padding: 10px; >> src\app\sidebar\sidebar.component.scss
+    echo         h2 { font-size: 16px; margin: 0 12px 0 0; } >> src\app\sidebar\sidebar.component.scss
+    echo         nav ul { >> src\app\sidebar\sidebar.component.scss
+    echo             flex-direction: row; >> src\app\sidebar\sidebar.component.scss
+    echo             justify-content: space-around; >> src\app\sidebar\sidebar.component.scss
+    echo             li { >> src\app\sidebar\sidebar.component.scss
+    echo                 margin: 0; >> src\app\sidebar\sidebar.component.scss
+    echo                 a { >> src\app\sidebar\sidebar.component.scss
+    echo                     padding: 8px 10px; >> src\app\sidebar\sidebar.component.scss
+    echo                     font-size: 13px; >> src\app\sidebar\sidebar.component.scss
+    echo                 } >> src\app\sidebar\sidebar.component.scss
+    echo                 .nav-button { >> src\app\sidebar\sidebar.component.scss
+    echo                     padding: 8px 10px; >> src\app\sidebar\sidebar.component.scss
+    echo                     font-size: 13px; >> src\app\sidebar\sidebar.component.scss
+    echo                     border-radius: 20px; >> src\app\sidebar\sidebar.component.scss
+    echo                 } >> src\app\sidebar\sidebar.component.scss
+    echo             } >> src\app\sidebar\sidebar.component.scss
+    echo         } >> src\app\sidebar\sidebar.component.scss
+    echo     } >> src\app\sidebar\sidebar.component.scss
+    echo } >> src\app\sidebar\sidebar.component.scss
+    echo @media ^(max-width: 480px^) { >> src\app\sidebar\sidebar.component.scss
+    echo     .sidebar { >> src\app\sidebar\sidebar.component.scss
+    echo         flex-wrap: wrap; >> src\app\sidebar\sidebar.component.scss
+    echo         padding: 8px; >> src\app\sidebar\sidebar.component.scss
+    echo         h2 { display: none; } >> src\app\sidebar\sidebar.component.scss
+    echo         nav ul { >> src\app\sidebar\sidebar.component.scss
+    echo             flex-wrap: wrap; >> src\app\sidebar\sidebar.component.scss
+    echo             li { >> src\app\sidebar\sidebar.component.scss
+    echo                 flex: 1 0 50%%; >> src\app\sidebar\sidebar.component.scss
+    echo                 a { padding: 6px; font-size: 12px; } >> src\app\sidebar\sidebar.component.scss
+    echo                 .nav-button { >> src\app\sidebar\sidebar.component.scss
+    echo                     padding: 6px; >> src\app\sidebar\sidebar.component.scss
+    echo                     font-size: 12px; >> src\app\sidebar\sidebar.component.scss
+    echo                     border-radius: 20px; >> src\app\sidebar\sidebar.component.scss
+    echo                 } >> src\app\sidebar\sidebar.component.scss
+    echo             } >> src\app\sidebar\sidebar.component.scss
+    echo         } >> src\app\sidebar\sidebar.component.scss
+    echo     } >> src\app\sidebar\sidebar.component.scss
+    echo } >> src\app\sidebar\sidebar.component.scss
 
-        
-    echo .sidebar h2 { >>src\app\sidebar\sidebar.component.scss
-    echo  font-size: 22px; >>src\app\sidebar\sidebar.component.scss
-    echo  margin-bottom: 20px; >>src\app\sidebar\sidebar.component.scss
-    echo  text-transform: uppercase; >>src\app\sidebar\sidebar.component.scss
-    echo  color: #ecf0f1; >>src\app\sidebar\sidebar.component.scss
-    echo } >>src\app\sidebar\sidebar.component.scss
-
-    echo .sidebar nav ul { >>src\app\sidebar\sidebar.component.scss
-    echo  list-style: none; >>src\app\sidebar\sidebar.component.scss
-    echo  padding: 0; >>src\app\sidebar\sidebar.component.scss
-    echo  width: 100%; >>src\app\sidebar\sidebar.component.scss
-    echo } >>src\app\sidebar\sidebar.component.scss
-
-    echo .sidebar nav ul li { >>src\app\sidebar\sidebar.component.scss
-    echo  margin: 15px 0; >>src\app\sidebar\sidebar.component.scss
-    echo } >>src\app\sidebar\sidebar.component.scss
-
-    echo .sidebar nav ul li a { >>src\app\sidebar\sidebar.component.scss
-    echo  text-decoration: none; >>src\app\sidebar\sidebar.component.scss
-    echo  color: #ecf0f1; >>src\app\sidebar\sidebar.component.scss
-    echo  font-size: 16px; >>src\app\sidebar\sidebar.component.scss
-    echo  padding: 10px 20px; >>src\app\sidebar\sidebar.component.scss
-    echo  display: block; >>src\app\sidebar\sidebar.component.scss
-    echo  text-align: left; >>src\app\sidebar\sidebar.component.scss
-    echo  border-radius: 4px; >>src\app\sidebar\sidebar.component.scss
-    echo  transition: background-color 0.3s ease; >>src\app\sidebar\sidebar.component.scss
-    echo } >>src\app\sidebar\sidebar.component.scss
-
-    echo .sidebar nav ul li a:hover, >>src\app\sidebar\sidebar.component.scss
-    echo .sidebar nav ul li a.active-link { >>src\app\sidebar\sidebar.component.scss
-    echo  background-color: #34495e; >>src\app\sidebar\sidebar.component.scss
-    echo } >>src\app\sidebar\sidebar.component.scss
     ::Creating sidebar.component.ts
     echo import { CommonModule } from '@angular/common'; >src\app\sidebar\sidebar.component.ts
     echo import { Component } from '@angular/core'; >>src\app\sidebar\sidebar.component.ts
@@ -589,56 +587,52 @@ if not exist "%projectDir%" (
         echo ^</div^> >> src\app\%%i\%%i.component.html
         echo ^</div^> >> src\app\%%i\%%i.component.html
         ::create component.Scss
-        echo table {>> src\app\%%i\%%i.component.scss
-        echo width: 100%;>> src\app\%%i\%%i.component.scss
-        echo border-collapse: collapse;>> src\app\%%i\%%i.component.scss
-        echo margin: 20px 0;>> src\app\%%i\%%i.component.scss
-        echo font-size: 16px;>> src\app\%%i\%%i.component.scss
-        echo background: #fff;>> src\app\%%i\%%i.component.scss
-        echo border-radius: 10px;>> src\app\%%i\%%i.component.scss
-        echo box-shadow: 0 4px 8px rgba^(0, 0, 0, 0.1^);>> src\app\%%i\%%i.component.scss
-        echo }>> src\app\%%i\%%i.component.scss
-
-        echo thead {>> src\app\%%i\%%i.component.scss
-        echo background: #003256;>> src\app\%%i\%%i.component.scss
-        echo color: #fff;>> src\app\%%i\%%i.component.scss
-        echo text-transform: uppercase;>> src\app\%%i\%%i.component.scss
+        echo table { >> src\app\%%i\%%i.component.scss
+        echo   width: 100%%; >> src\app\%%i\%%i.component.scss
+        echo   border-collapse: collapse; >> src\app\%%i\%%i.component.scss
+        echo   min-width: 500px; >> src\app\%%i\%%i.component.scss
+        echo   table-layout: auto; >> src\app\%%i\%%i.component.scss
+        echo } >> src\app\%%i\%%i.component.scss
+        echo th, td { >> src\app\%%i\%%i.component.scss
+        echo   padding: 8px; >> src\app\%%i\%%i.component.scss
+        echo   text-align: center; >> src\app\%%i\%%i.component.scss
+        echo   font-size: 12px; >> src\app\%%i\%%i.component.scss
+        echo } >> src\app\%%i\%%i.component.scss
+        echo thead { >> src\app\%%i\%%i.component.scss
+        echo   background: #014e85; >> src\app\%%i\%%i.component.scss
+        echo   color: #fff; >> src\app\%%i\%%i.component.scss
+        echo } >> src\app\%%i\%%i.component.scss
+        echo tbody tr:nth-child^(odd^) { >> src\app\%%i\%%i.component.scss
+        echo   background: #f9f9f9; >> src\app\%%i\%%i.component.scss
+        echo } >> src\app\%%i\%%i.component.scss
+        echo tbody tr:nth-child^(even^) { >> src\app\%%i\%%i.component.scss
+        echo   background: #f4f7fa; >> src\app\%%i\%%i.component.scss
+        echo } >> src\app\%%i\%%i.component.scss
+        echo tbody tr:hover { >> src\app\%%i\%%i.component.scss
+        echo   background: #eaf2f8; >> src\app\%%i\%%i.component.scss
+        echo } >> src\app\%%i\%%i.component.scss
+        echo .btn { >> src\app\%%i\%%i.component.scss
+        echo   padding: 8px 12px; >> src\app\%%i\%%i.component.scss
+        echo   font-size: 14px; >> src\app\%%i\%%i.component.scss
+        echo   background: #d6eaff; >> src\app\%%i\%%i.component.scss
+        echo   border: 1px solid #a9d5ff; >> src\app\%%i\%%i.component.scss
+        echo   border-radius: 5px; >> src\app\%%i\%%i.component.scss
+        echo   cursor: pointer; >> src\app\%%i\%%i.component.scss
+        echo } >> src\app\%%i\%%i.component.scss
+        echo .btn:hover { >> src\app\%%i\%%i.component.scss
+        echo   background: #b8d8ff; >> src\app\%%i\%%i.component.scss
+        echo } >> src\app\%%i\%%i.component.scss
+        echo @media ^(max-width: 768px^) { >> src\app\%%i\%%i.component.scss
+        echo   table { >> src\app\%%i\%%i.component.scss
+        echo     min-width: 500px; >> src\app\%%i\%%i.component.scss
+        echo   } >> src\app\%%i\%%i.component.scss
+        echo } >> src\app\%%i\%%i.component.scss
+        echo @media ^(max-width: 480px^) { >> src\app\%%i\%%i.component.scss
+        echo   table { >> src\app\%%i\%%i.component.scss
+        echo     min-width: 400px; >> src\app\%%i\%%i.component.scss
+        echo   } >> src\app\%%i\%%i.component.scss
         echo } >> src\app\%%i\%%i.component.scss
 
-        echo thead th, tbody td {>> src\app\%%i\%%i.component.scss
-        echo padding: 10px;>> src\app\%%i\%%i.component.scss
-        echo text-align: center;>> src\app\%%i\%%i.component.scss
-        echo }  >> src\app\%%i\%%i.component.scss
-
-        echo tbody tr:nth-child^(odd^) {>> src\app\%%i\%%i.component.scss
-        echo background: #f4f7fa;>> src\app\%%i\%%i.component.scss
-        echo }>> src\app\%%i\%%i.component.scss
-
-        echo tbody tr:nth-child^(even^) {>> src\app\%%i\%%i.component.scss
-        echo background: #ecf0f1;>> src\app\%%i\%%i.component.scss
-        echo }>> src\app\%%i\%%i.component.scss
-
-        echo tbody tr:hover {>> src\app\%%i\%%i.component.scss
-        echo background: #dcdde1;>> src\app\%%i\%%i.component.scss
-        echo cursor: pointer;>> src\app\%%i\%%i.component.scss
-        echo }>> src\app\%%i\%%i.component.scss
-
-        echo .btn {>> src\app\%%i\%%i.component.scss
-        echo padding: 8px 12px;>> src\app\%%i\%%i.component.scss
-        echo margin: 5px;>> src\app\%%i\%%i.component.scss
-        echo font-size: 14px;>> src\app\%%i\%%i.component.scss
-        echo color: #fff;>> src\app\%%i\%%i.component.scss
-        echo background: rgb^(106, 132, 149^); >> src\app\%%i\%%i.component.scss
-        echo border: none;>> src\app\%%i\%%i.component.scss
-        echo border-radius: 5px;>> src\app\%%i\%%i.component.scss
-        echo cursor: pointer;>> src\app\%%i\%%i.component.scss
-        echo transition: 0.3s;>> src\app\%%i\%%i.component.scss
-        echo }>> src\app\%%i\%%i.component.scss
-
-        echo .btn:hover {>> src\app\%%i\%%i.component.scss
-        echo background: #698fa9;>> src\app\%%i\%%i.component.scss
-        echo transform: scale^(1.05^); >> src\app\%%i\%%i.component.scss
-        echo } >> src\app\%%i\%%i.component.scss
 
         echo 
         if errorlevel 1 (
@@ -712,158 +706,132 @@ if not exist "%projectDir%" (
     :: creating component update.html
     echo ^<h2^>Update {{ table }}^</h2^> >src\app\update\update.component.html
     echo ^<form^ *ngIf="itemData && objectKeys(itemData).length > 0" ^(ngSubmit^)="updateItem()"^> >>src\app\update\update.component.html
-    echo ^<div^ *ngFor="let key of objectKeys(itemData)"^> >>src\app\update\update.component.html
+    echo ^<ng-container^ *ngFor="let key of objectKeys(itemData)"^> >>src\app\update\update.component.html
+    echo    ^<div *ngIf="key !== '_id'"^> >>src\app\update\update.component.html
     echo     ^<label^>{{ key }}:^</label^> >>src\app\update\update.component.html
     echo     ^<input type="text" [^(ngModel^)]="itemData[key]" [name]="key" /^> >>src\app\update\update.component.html
     echo ^</div^> >>src\app\update\update.component.html
+    echo ^</ng-container^> >>src\app\update\update.component.html    
     echo ^<button^ type="submit"^>Update^</button^> >>src\app\update\update.component.html
     echo ^</form^> >>src\app\update\update.component.html
 
     :: creating component update.scss
     echo /* General form container with sleek design */ >src\app\update\update.component.scss
-    echo form { >>src\app\update\update.component.scss
-    echo     max-width: 600px; >>src\app\update\update.component.scss
-    echo     margin: 40px auto; >>src\app\update\update.component.scss
-    echo     padding: 40px; >>src\app\update\update.component.scss
-    echo     border-radius: 12px; >>src\app\update\update.component.scss
-    echo     background: linear-gradient^(135deg, #f5f4f4, #e8eff5^); /* Subtle gradient for depth */  >>src\app\update\update.component.scss
-    echo     box-shadow: 0 8px 20px rgba^(0, 0, 0, 0.15^);  >>src\app\update\update.component.scss
-    echo     font-family: 'Roboto', sans-serif; >>src\app\update\update.component.scss
-    echo     color: #333; >>src\app\update\update.component.scss
-    echo     animation: fadeIn 0.8s ease-out; >>src\app\update\update.component.scss
-    echo     transition: transform 0.3s ease, box-shadow 0.3s ease; >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo /* Smooth fade-in animation */ >>src\app\update\update.component.scss
-    echo @keyframes fadeIn { >>src\app\update\update.component.scss
-    echo from { >>src\app\update\update.component.scss
-    echo     opacity: 0; >>src\app\update\update.component.scss
-    echo     transform: translateY^(-20px^); >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-    echo to { >>src\app\update\update.component.scss
-    echo     opacity: 1; >>src\app\update\update.component.scss
-    echo    transform: translateY^(0^); >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo form:hover { >>src\app\update\update.component.scss
-    echo   transform: translateY^(-5px^); >>src\app\update\update.component.scss
-    echo   box-shadow: 0 12px 30px rgba^(0, 0, 0, 0.2^); >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo /* Professional heading with an elegant gradient text effect */ >>src\app\update\update.component.scss
-    echo h2 { >>src\app\update\update.component.scss
-    echo  font-size: 32px; >>src\app\update\update.component.scss
-    echo  font-weight: bold; >>src\app\update\update.component.scss
-    echo  text-align: center; >>src\app\update\update.component.scss
-    echo  color: transparent; >>src\app\update\update.component.scss
-    echo  background: linear-gradient^(45deg, #00264d, #008C8C^); >>src\app\update\update.component.scss
-    echo  -webkit-background-clip: text; >>src\app\update\update.component.scss
-    echo  background-clip: text; >>src\app\update\update.component.scss
-    echo  text-transform: uppercase; >>src\app\update\update.component.scss
-    echo  letter-spacing: 1.5px; >>src\app\update\update.component.scss
-    echo  margin-bottom: 30px; >>src\app\update\update.component.scss
-    echo  position: relative; >>src\app\update\update.component.scss
-    echo  transition: transform 0.3s ease, color 0.3s ease; >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo h2:hover { >>src\app\update\update.component.scss
-    echo transform: scale^(1.05^); >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo /* Labels with elegant typography */ >>src\app\update\update.component.scss
-    echo form label { >>src\app\update\update.component.scss
-    echo    display: block; >>src\app\update\update.component.scss
-    echo    font-size: 14px; >>src\app\update\update.component.scss
-    echo    font-weight: bold; >>src\app\update\update.component.scss
-    echo    margin-bottom: 8px; >>src\app\update\update.component.scss
-    echo    color: #444; >>src\app\update\update.component.scss
-    echo    text-transform: capitalize; >>src\app\update\update.component.scss
-    echo    letter-spacing: 0.5px; >>src\app\update\update.component.scss
-    echo    transition: color 0.3s ease; >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo form label:hover { >>src\app\update\update.component.scss
-    echo    color: #008C8C; >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-    echo /* Refined input fields with soft gradients and glowing focus effect */ >>src\app\update\update.component.scss
-    echo form input { >>src\app\update\update.component.scss
-    echo    width: 100%%; >>src\app\update\update.component.scss
-    echo     padding: 12px; >>src\app\update\update.component.scss
-    echo     border: none; >>src\app\update\update.component.scss
-    echo     border-radius: 8px; >>src\app\update\update.component.scss
-    echo     font-size: 16px; >>src\app\update\update.component.scss
-    echo     background: linear-gradient^(135deg, #ffffff, #f0f4f8^); >>src\app\update\update.component.scss
-    echo     color: #333; >>src\app\update\update.component.scss
-    echo     box-shadow: inset 0 2px 4px rgba^(0, 0, 0, 0.1^); >>src\app\update\update.component.scss
-    echo     transition: box-shadow 0.3s ease, transform 0.3s ease; >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo form input:focus { >>src\app\update\update.component.scss
-    echo     outline: none; >>src\app\update\update.component.scss
-    echo     box-shadow: 0 0 8px rgba^(0, 140, 140, 0.5^); >>src\app\update\update.component.scss
-    echo     transform: translateY^(-2px^); >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo /* Input hover effect */ >>src\app\update\update.component.scss
-    echo     form input:hover { >>src\app\update\update.component.scss
-    echo     box-shadow: inset 0 4px 6px rgba^(0, 0, 0, 0.1^); >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo /* Submit button with a bold gradient and smooth hover effect */  >>src\app\update\update.component.scss
-    echo form button { >>src\app\update\update.component.scss
-    echo     padding: 14px; >>src\app\update\update.component.scss
-    echo     background: linear-gradient^(45deg, #012344, #012344^); >>src\app\update\update.component.scss
-    echo     color: #fff; >>src\app\update\update.component.scss
-    echo     width: 80%%; >>src\app\update\update.component.scss
-    echo     border: none; >>src\app\update\update.component.scss
-    echo     border-radius: 8px; >>src\app\update\update.component.scss
-    echo     font-size: 18px; >>src\app\update\update.component.scss
-    echo     font-weight: bold; >>src\app\update\update.component.scss
-    echo     padding: 10px; /* Reduced padding */ >>src\app\update\update.component.scss
-    echo     font-size: 14px; /* Smaller font size */ >>src\app\update\update.component.scss
-    echo     margin: 20px auto 0; /* Center the button horizontally */ >>src\app\update\update.component.scss
-    echo     display: block; /* Ensures centering works */ >>src\app\update\update.component.scss
-    echo     text-transform: uppercase; >>src\app\update\update.component.scss
-    echo     cursor: pointer; >>src\app\update\update.component.scss
-    echo     box-shadow: 0 6px 12px rgba^(0, 140, 140, 0.2^); >>src\app\update\update.component.scss
-    echo     transition: transform 0.3s ease, box-shadow 0.3s ease; >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo form button:hover { >>src\app\update\update.component.scss
-    echo     transform: translateY^(-4px^); >>src\app\update\update.component.scss
-    echo     box-shadow: 0 8px 16px rgba^(0, 140, 140, 0.3^); >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo form button:active { >>src\app\update\update.component.scss
-    echo     transform: translateY^(2px^); >>src\app\update\update.component.scss
-    echo     box-shadow: 0 4px 8px rgba^(0, 140, 140, 0.2^); >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-    
-    echo /* Consistent spacing for form fields */ >>src\app\update\update.component.scss
-    echo form div { >>src\app\update\update.component.scss
-    echo     margin-bottom: 20px; >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo /* Responsive design for smaller screens */ >>src\app\update\update.component.scss
-    echo @media ^(max-width: 600px^) { >>src\app\update\update.component.scss
-    echo form { >>src\app\update\update.component.scss
-    echo     padding: 30px; >>src\app\update\update.component.scss
-    echo     margin: 20px; >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo form h2 { >>src\app\update\update.component.scss
-    echo     font-size: 28px; >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-    echo form button { >>src\app\update\update.component.scss
-    echo     font-size: 16px; >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-    echo } >>src\app\update\update.component.scss
-
-
-
-
+        echo /* General form container with sleek design */ >>src\app\update\update.component.scss
+        echo form { >>src\app\update\update.component.scss
+        echo     max-width: 600px; >>src\app\update\update.component.scss
+        echo     margin: 40px auto; >>src\app\update\update.component.scss
+        echo     padding: 40px; >>src\app\update\update.component.scss
+        echo     border-radius: 12px; >>src\app\update\update.component.scss
+        echo     background: linear-gradient^(135deg, #f5f4f4, #e8eff5^); >>src\app\update\update.component.scss
+        echo     box-shadow: 0 8px 20px rgba^(0, 0, 0, 0.15^); >>src\app\update\update.component.scss
+        echo     font-family: 'Roboto', sans-serif; >>src\app\update\update.component.scss
+        echo     color: #333; >>src\app\update\update.component.scss
+        echo     animation: fadeIn 0.8s ease-out; >>src\app\update\update.component.scss
+        echo     transition: transform 0.3s ease, box-shadow 0.3s ease; >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo @keyframes fadeIn { >>src\app\update\update.component.scss
+        echo   from { >>src\app\update\update.component.scss
+        echo     opacity: 0; >>src\app\update\update.component.scss
+        echo     transform: translateY^(-20px^); >>src\app\update\update.component.scss
+        echo   } >>src\app\update\update.component.scss
+        echo   to { >>src\app\update\update.component.scss
+        echo     opacity: 1; >>src\app\update\update.component.scss
+        echo     transform: translateY^(0^); >>src\app\update\update.component.scss
+        echo   } >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo form:hover { >>src\app\update\update.component.scss
+        echo   transform: translateY^(-5px^); >>src\app\update\update.component.scss
+        echo   box-shadow: 0 12px 30px rgba^(0, 0, 0, 0.2^); >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo h2 { >>src\app\update\update.component.scss
+        echo   font-size: 32px; >>src\app\update\update.component.scss
+        echo   font-weight: bold; >>src\app\update\update.component.scss
+        echo   text-align: center; >>src\app\update\update.component.scss
+        echo   color: transparent; >>src\app\update\update.component.scss
+        echo   background: linear-gradient^(45deg, #00264d, #008C8C^); >>src\app\update\update.component.scss
+        echo   -webkit-background-clip: text; >>src\app\update\update.component.scss
+        echo   background-clip: text; >>src\app\update\update.component.scss
+        echo   text-transform: uppercase; >>src\app\update\update.component.scss
+        echo   letter-spacing: 1.5px; >>src\app\update\update.component.scss
+        echo   margin-bottom: 30px; >>src\app\update\update.component.scss
+        echo   position: relative; >>src\app\update\update.component.scss
+        echo   transition: transform 0.3s ease, color 0.3s ease; >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo h2:hover { >>src\app\update\update.component.scss
+        echo   transform: scale^(1.05^); >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo form label { >>src\app\update\update.component.scss
+        echo   display: block; >>src\app\update\update.component.scss
+        echo   font-size: 14px; >>src\app\update\update.component.scss
+        echo   font-weight: bold; >>src\app\update\update.component.scss
+        echo   margin-bottom: 8px; >>src\app\update\update.component.scss
+        echo   color: #444; >>src\app\update\update.component.scss
+        echo   text-transform: capitalize; >>src\app\update\update.component.scss
+        echo   letter-spacing: 0.5px; >>src\app\update\update.component.scss
+        echo   transition: color 0.3s ease; >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo form label:hover { >>src\app\update\update.component.scss
+        echo   color: #008C8C; >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo form input { >>src\app\update\update.component.scss
+        echo   width: 100%%; >>src\app\update\update.component.scss
+        echo   padding: 12px; >>src\app\update\update.component.scss
+        echo   border: none; >>src\app\update\update.component.scss
+        echo   border-radius: 8px; >>src\app\update\update.component.scss
+        echo   font-size: 16px; >>src\app\update\update.component.scss
+        echo   background: linear-gradient^(135deg, #ffffff, #f0f4f8^); >>src\app\update\update.component.scss
+        echo   color: #333; >>src\app\update\update.component.scss
+        echo   box-shadow: inset 0 2px 4px rgba^(0, 0, 0, 0.1^); >>src\app\update\update.component.scss
+        echo   transition: box-shadow 0.3s ease, transform 0.3s ease; >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo form input:focus { >>src\app\update\update.component.scss
+        echo   outline: none; >>src\app\update\update.component.scss
+        echo   box-shadow: 0 0 8px rgba^(0, 140, 140, 0.5^); >>src\app\update\update.component.scss
+        echo   transform: translateY^(-2px^); >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo form input:hover { >>src\app\update\update.component.scss
+        echo   box-shadow: inset 0 4px 6px rgba^(0, 0, 0, 0.1^); >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo form button { >>src\app\update\update.component.scss
+        echo   background: linear-gradient^(45deg, #012344, #012344^); >>src\app\update\update.component.scss
+        echo   color: #fff; >>src\app\update\update.component.scss
+        echo   width: 80%%; >>src\app\update\update.component.scss
+        echo   border: none; >>src\app\update\update.component.scss
+        echo   border-radius: 8px; >>src\app\update\update.component.scss
+        echo   font-size: 14px; >>src\app\update\update.component.scss
+        echo   font-weight: bold; >>src\app\update\update.component.scss
+        echo   margin: 20px auto 0; >>src\app\update\update.component.scss
+        echo   display: block; >>src\app\update\update.component.scss
+        echo   text-transform: uppercase; >>src\app\update\update.component.scss
+        echo   cursor: pointer; >>src\app\update\update.component.scss
+        echo   box-shadow: 0 6px 12px rgba^(0, 140, 140, 0.2^); >>src\app\update\update.component.scss
+        echo   transition: transform 0.3s ease, box-shadow 0.3s ease; >>src\app\update\update.component.scss
+        echo   padding: 10px; >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo form button:hover { >>src\app\update\update.component.scss
+        echo   transform: translateY^(-4px^); >>src\app\update\update.component.scss
+        echo   box-shadow: 0 8px 16px rgba^(0, 140, 140, 0.3^); >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo form button:active { >>src\app\update\update.component.scss
+        echo   transform: translateY^(2px^); >>src\app\update\update.component.scss
+        echo   box-shadow: 0 4px 8px rgba^(0, 140, 140, 0.2^); >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo form div { >>src\app\update\update.component.scss
+        echo   margin-bottom: 20px; >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
+        echo @media ^(max-width: 600px^) { >>src\app\update\update.component.scss
+        echo   form { >>src\app\update\update.component.scss
+        echo     padding: 30px; >>src\app\update\update.component.scss
+        echo     margin: 20px; >>src\app\update\update.component.scss
+        echo   } >>src\app\update\update.component.scss
+        echo   form h2 { >>src\app\update\update.component.scss
+        echo     font-size: 28px; >>src\app\update\update.component.scss
+        echo   } >>src\app\update\update.component.scss
+        echo   form button { >>src\app\update\update.component.scss
+        echo     font-size: 16px; >>src\app\update\update.component.scss
+        echo   } >>src\app\update\update.component.scss
+        echo } >>src\app\update\update.component.scss
     :: Create the shared service for all components
     echo ===== Creating shared service for components =====
     ng g s services/shared
@@ -896,8 +864,6 @@ if not exist "%projectDir%" (
     echo   return this.http.delete^(`${this.apiUrl}/delete/${table}`^); >> src\app\services\shared.service.ts
     echo } >> src\app\services\shared.service.ts
     echo } >> src\app\services\shared.service.ts
-
-
     if errorlevel 1 (
         echo Failed to generate the shared service!
         exit /b
